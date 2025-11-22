@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import Depends, APIRouter, Path, status
+from fastapi import Depends, APIRouter, Path, status, Query
 from typing import Annotated, List
 
 
@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
 async def get_tracks(
-    offset=Annotated[int, Path(default=0)], limit=Annotated[int, Path(default=10)]
+    offset: int = Query(default=0), limit: int = Query(default=50)
 ):
     pass
 
@@ -34,7 +34,6 @@ async def get_track_by_name(name: str):
 
 # Админские эндпоинты
 
-
 @router.post("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
 async def create_track(track: TrackCreateSchema):
     pass
@@ -42,4 +41,9 @@ async def create_track(track: TrackCreateSchema):
 
 @router.put("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
 async def create_track(track: TrackCreateSchema):
+    pass
+
+
+@router.delete("/{track_id}")
+async def delete_track(track_id: uuid.UUID):
     pass
