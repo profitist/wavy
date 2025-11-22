@@ -5,7 +5,6 @@ from sqlalchemy import String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from app.models.friendship import Friendship
 
 class User(Base):
     __tablename__ = "user"
@@ -18,5 +17,4 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     shared_tracks: Mapped[List["SharedTrack"]] = relationship("SharedTrack", back_populates="sender")
     reactions: Mapped[List["Reaction"]] = relationship("Reaction", back_populates="user")
-
     friends: Mapped[List["User"]] = relationship("User", back_populates="friends")

@@ -13,7 +13,6 @@ class Friendship(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     sender_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), primary_key=True, default=uuid.uuid4)
     receiver_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), primary_key=True, default=uuid.uuid4)
-
     sender: Mapped["User"] = relationship("User", foreign_keys=[sender_id])
     receiver: Mapped["User"] = relationship("User", foreign_keys=[receiver_id])
 
