@@ -5,17 +5,19 @@ from sqlalchemy import String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from app.models.friendship import friendship
+from app.models.friendship import Friendship
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
     username: Mapped[str] = mapped_column(String(40), unique=True, index=True)
     description: Mapped[str] = mapped_column(String(250), nullable=True)
+    hashed_password: Mapped[str] = mapped_column(String(50), nullable=True)
+    role: Mapped[str] = mapped_column(String(15), nullable=True)
     phone_number: Mapped[Optional[str]] = mapped_column(String(12), nullable=True)
     profile_picture_url: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
@@ -28,5 +30,5 @@ class User(Base):
         "Reaction", back_populates="user"
     )
     friends: Mapped[List["User"]] = relationship(
-        "User", back_populates="friends", secondary=friendship
+        "User", back_populates="friends", secondary=Friendship
     )
