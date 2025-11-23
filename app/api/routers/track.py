@@ -16,9 +16,7 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
-async def get_tracks(
-    offset: int = Query(default=0), limit: int = Query(default=50)
-):
+async def get_tracks(offset: int = Query(default=0), limit: int = Query(default=50)):
     pass
 
 
@@ -33,6 +31,7 @@ async def get_track_by_name(name: str):
 
 
 # Админские эндпоинты
+
 
 @router.post("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
 async def create_track(track: TrackCreateSchema):

@@ -21,8 +21,4 @@ class UserSchema(BaseModel):
     phone_number: str = Field(min_length=5, max_length=15)
     created_at: datetime
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        str_strip_whitespace=True
-    )
-
+    model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
