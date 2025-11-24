@@ -1,5 +1,5 @@
 from typing import AsyncGenerator, Annotated
-
+from fastapi import Depends
 from app.core.database import session_maker
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user_repository import Repository as UserRepository
@@ -12,7 +12,7 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def get_user_repository(
-    db: Annotated[AsyncSession, get_async_session],
+    db: Annotated[AsyncSession, Depends(get_async_session)],
 ) -> UserRepository:
     return UserRepository(db=db)
 
