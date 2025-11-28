@@ -5,11 +5,11 @@ from sqlalchemy import String, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from app.models.friendship import friendship
+from app.models.friendship import Friendship
 
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
@@ -28,5 +28,5 @@ class User(Base):
         "Reaction", back_populates="user"
     )
     friends: Mapped[List["User"]] = relationship(
-        "User", back_populates="friends", secondary=friendship
+        "User", back_populates="friends", secondary=Friendship
     )
