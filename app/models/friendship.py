@@ -1,9 +1,11 @@
 import uuid
-from sqlalchemy import ForeignKey, Enum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List, Optional
+from datetime import datetime
+from sqlalchemy import String, func, ForeignKey, Table, Column, Enum
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from app.models.friendship_status import FriendshipStatus
+from friendship_status import FriendshipStatus
 
 
 class Friendship(Base):
