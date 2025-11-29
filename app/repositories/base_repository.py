@@ -9,6 +9,7 @@ from app.core.database import Base
 
 model_type = TypeVar("model_type", bound=Base)
 
+
 class BaseRepo(Generic[model_type]):
     def __init__(self, model: Type[model_type], db: AsyncSession):
         self.model = model
@@ -34,7 +35,9 @@ class BaseRepo(Generic[model_type]):
             await self.db.rollback()
             raise e
 
-    async def update(self, id: uuid.UUID, attributes: dict[str, Any]) -> Optional[model_type]:
+    async def update(
+        self, id: uuid.UUID, attributes: dict[str, Any]
+    ) -> Optional[model_type]:
         query = update(self.model).where(self.model.id == id).values(**attributes)
         try:
             result = await self.db.execute(query)
