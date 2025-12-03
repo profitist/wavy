@@ -4,7 +4,7 @@ from fastapi import Depends, APIRouter, Path, status, Query
 from typing import Annotated, List
 
 
-from app.shemas.track_schema import TrackSchema, TrackCreateSchema
+from app.schemas.track_schema import TrackSchema, TrackCreateSchema
 
 
 router = APIRouter(
