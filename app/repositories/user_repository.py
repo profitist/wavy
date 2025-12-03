@@ -15,5 +15,5 @@ class UserRepository(BaseRepo[User]):
         return await self.db.scalar(query)
 
     async def get_by_email(self, email: str) -> Optional[User]:
-        query = select(self.model).where(self.model.email == email)
+        query = select(self.model).where(self.model.username == email)
         return await self.db.scalar(query)

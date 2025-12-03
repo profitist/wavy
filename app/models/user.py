@@ -1,7 +1,7 @@
 import uuid
 from typing import List, Optional
 from datetime import datetime
-from sqlalchemy import String, func
+from sqlalchemy import String, func, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
@@ -22,7 +22,9 @@ class User(Base):
     profile_picture_url: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
     )
-    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=True, default=datetime.now()
+    )
     shared_tracks: Mapped[List["SharedTrack"]] = relationship(
         "SharedTrack", back_populates="sender"
     )
