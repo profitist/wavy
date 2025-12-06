@@ -1,23 +1,23 @@
-from typing import List, Annotated
+from typing import Annotated
 
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from app.core.dependencies import get_user_service
-from app.services.user_service import Service as UserService
+from app.services.user_service import UserService as UserService
 from app.auth.auth import verify_password, create_access_token, create_refresh_token
 from app.config import JWT_SECRET_KEY, ALGORITHM
 
-router = APIRouter()
+router = APIRouter(prefix="/tokens", tags=["tokens"])
 
 
-@router.post("/tokens")
+@router.post("/tokens", response_model=None)
 async def login(
-    user_service: Annotated[UserService, Depends(Depends(get_user_service))],
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_service: UserService = Depends(get_user_service),
 ):
     db_user = await user_service.get_by_name(form_data.username)
-    if not db_user or not verify_password(db_user.hashed_password):
+    if not db_user or not verify_password(form_data.password, db_user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -37,7 +37,7 @@ async def login(
 
 
 @router.post("/refresh")
-async def refresh_token(
+async def get_new_access_token(
     refreshed_token: str,
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):

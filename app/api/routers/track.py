@@ -1,48 +1,73 @@
 import uuid
 
-from fastapi import Depends, APIRouter, Path, status, Query
+from fastapi import Depends, APIRouter, Path, status, Query, HTTPException
 from typing import Annotated, List
 
-
-from app.shemas.track_schema import TrackSchema, TrackCreateSchema
-
+from app.models.user import User
+from app.schemas.track_schema import TrackSchema, TrackCreateSchema, TrackUpdateSchema
+from app.services.track_service import TrackService
+from app.core.dependencies import get_track_service
+from app.auth.user_validation import get_current_admin
 
 router = APIRouter(
     prefix="/tracks",
     tags=["tracks"],
 )
 
-# Клиентские эндпоинты
-
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
-async def get_tracks(offset: int = Query(default=0), limit: int = Query(default=50)):
-    pass
+async def get_tracks(
+    offset: int = Query(default=0),
+    limit: int = Query(default=50),
+    service: TrackService = Depends(get_track_service),
+):
+    result = await service.get_tracks(offset, limit)
+    return result
 
 
 @router.get("/{track_id}", response_model=TrackSchema, status_code=status.HTTP_200_OK)
-async def get_track(track_id: uuid.UUID):
-    pass
+async def get_track(
+    track_id: uuid.UUID, service: TrackService = Depends(get_track_service)
+):
+    result = service.get_by_id(track_id)
+    return result
 
 
 @router.get("/{name}", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
-async def get_track_by_name(name: str):
-    pass
-
-
-# Админские эндпоинты
+async def get_track_by_name(
+    name: str, service: TrackService = Depends(get_track_service)
+):
+    db_tracks = await service.get_tracks_by_name(name)
+    return db_tracks
 
 
 @router.post("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
-async def create_track(track: TrackCreateSchema):
-    pass
+async def create_track(
+    track: TrackCreateSchema,
+    service: TrackService = Depends(get_track_service),
+    _: User = Depends(get_current_admin),
+):
+    created_track = await service.create_track(track)
+    return created_track
 
 
 @router.put("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
-async def create_track(track: TrackCreateSchema):
-    pass
+async def edit_track(
+    track: TrackUpdateSchema,
+    service: TrackService = Depends(get_track_service),
+    _: User = Depends(get_current_admin),
+):
+    new_track_info = await service.edit_track_info(track.id, track)
+    return new_track_info
 
 
-@router.delete("/{track_id}")
-async def delete_track(track_id: uuid.UUID):
-    pass
+@router.delete(
+    "/{track_id}", response_model=dict, status_code=status.HTTP_200_OK
+)
+async def delete_track(
+    track_id: uuid.UUID,
+    service: TrackService = Depends(get_track_service),
+    _: User = Depends(get_current_admin),
+):
+    deleted_info = service.delete_track(track_id)
+    return deleted_info

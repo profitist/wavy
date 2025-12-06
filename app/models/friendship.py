@@ -5,7 +5,7 @@ from sqlalchemy import String, func, ForeignKey, Table, Column, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
-from friendship_status import FriendshipStatus
+from app.models.friendship_status import FriendshipStatus
 
 
 class Friendship(Base):

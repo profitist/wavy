@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -19,3 +19,8 @@ class TrackRepository(BaseRepo[Track]):
     async def get_track_by_link(self, external_link: str) -> Optional[Track]:
         query = select(self.model).where(self.model.external_link == external_link)
         return await self.db.scalar(query)
+
+    async def get_track_by_name(self, track_name: str) -> List[Track]:
+        query = select(self.model).where(self.model.title == track_name)
+        result = await self.db.scalars(query)
+        return list(result)
