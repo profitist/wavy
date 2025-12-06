@@ -1,6 +1,9 @@
+import mimetypes
+import os
 import uuid
 
-from fastapi import Depends, APIRouter, Path, status, Query, HTTPException
+from fastapi import Depends, APIRouter, Path, status, Query, HTTPException, UploadFile, \
+    File
 from typing import Annotated, List
 
 from app.models.user import User
@@ -8,6 +11,7 @@ from app.schemas.track_schema import TrackSchema, TrackCreateSchema, TrackUpdate
 from app.services.track_service import TrackService
 from app.core.dependencies import get_track_service
 from app.auth.user_validation import get_current_admin
+from fastapi.responses import StreamingResponse
 
 router = APIRouter(
     prefix="/tracks",
@@ -71,3 +75,32 @@ async def delete_track(
 ):
     deleted_info = service.delete_track(track_id)
     return deleted_info
+
+
+@router.post("/upload-cover", status_code=status.HTTP_201_CREATED)
+async def upload_cover(
+    file: UploadFile = File(...),
+    service: TrackService = Depends(get_track_service),
+    _: User = Depends(get_current_admin),
+) -> dict:
+    file_bytes = await file.read()
+    ext = os.path.splitext(file.filename)[1]
+    filename = f"{uuid.uuid4()}{ext}"
+    await service.save_song_cover(file_bytes, filename)
+    return {"filename": filename, 'status': 'saved'}
+
+
+@router.post("/download-cover/{track_uuid}", status_code=status.HTTP_200_OK)
+async def download_cover(
+    track_uuid: str,
+    service: TrackService = Depends(get_track_service),
+) -> StreamingResponse:
+    file = service.s3_client.download_bytes(filename=track_uuid)
+    mime, _ = mimetypes.guess_type(track_uuid)
+    mime = mime or "application/octet-stream"
+    return StreamingResponse(
+        iter([file]),
+        media_type=mime,
+    )
+
+

@@ -3,6 +3,7 @@ from typing import List
 
 from fastapi import HTTPException, status
 
+from app.core.s3 import S3Client
 from app.models.track import Track
 from app.models.user import User
 from app.repositories.track_repository import TrackRepository
@@ -10,8 +11,9 @@ from app.schemas.track_schema import TrackCreateSchema, TrackUpdateSchema, Track
 
 
 class TrackService:
-    def __init__(self, repo: TrackRepository):
+    def __init__(self, repo: TrackRepository, s3_client: S3Client):
         self.repo = repo
+        self.s3_client = s3_client
 
     async def get_by_id(self, track_id: uuid.UUID) -> Track:
         result = await self.repo.get_by_id(track_id)
@@ -52,3 +54,12 @@ class TrackService:
             )
         await self.repo.delete(track_id)
         return {f"info": TrackSchema.from_orm(db_track), "message": "Track deleted"}
+
+    async def save_song_cover(self, cover: bytes, filename: str) -> Track:
+        await self.s3_client.upload_bytes(cover, filename)
+
+    async def get_cover(self, id: uuid.UUID) -> bytes:
+        song_name = self.repo.get_by_id(id).album_cover_name
+        song_cover = await self.s3_client.download_bytes(song_name)
+        return song_cover
+

@@ -9,6 +9,8 @@ from app.repositories.track_repository import TrackRepository
 from app.services.friendship_service import FriendshipService
 from app.services.user_service import UserService
 from app.services.track_service import TrackService
+from app.core.s3 import S3Client
+from app.config import S3_ID, S3_SECRET
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
@@ -46,7 +48,12 @@ async def get_track_repository(
     return FriendshipRepository(db=db)
 
 
+async def get_s3_client():
+    return S3Client(S3_ID, S3_SECRET, 'https://storage.yandexcloud.net', 'storage-s3')
+
+
 async def get_track_service(
     repo: Annotated[TrackRepository, Depends(get_track_repository)],
+    s3_client: Annotated[S3Client, Depends(get_s3_client)],
 ):
-    return TrackService(repo=repo)
+    return TrackService(repo=repo, s3_client=s3_client)
