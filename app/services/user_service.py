@@ -18,8 +18,7 @@ class UserService(BaseService[UserRepository]):
         super().__init__(repository=repo)
 
     async def get_by_name(self, username: str) -> UserModel:
-        user = await self.repository.get_by_username(username)
-        return user
+        return await self.repository.get_by_username(username)
 
     async def get_by_id(self, user_id: uuid.UUID) -> UserModel:
         return await self.repository.get_by_id(user_id)

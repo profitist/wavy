@@ -6,10 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.friendship_repository import FriendshipRepository
 from app.repositories.user_repository import UserRepository
 from app.repositories.track_repository import TrackRepository
+from app.repositories.shared_track_repository import SharedTrackRepository
 from app.services.friendship_service import FriendshipService
 from app.services.user_service import UserService
 from app.services.track_service import TrackService
-
+from app.services.sharing_service import SharingService
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with session_maker() as session:
@@ -33,6 +34,11 @@ async def get_friendship_repository(
 ):
     return FriendshipRepository(db=db)
 
+async def get_shared_track_repository(
+        db: Annotated[AsyncSession, Depends(get_async_session)]
+):
+    return SharedTrackRepository(db)
+
 
 async def get_friendship_service(
     repo: Annotated[FriendshipRepository, Depends(get_friendship_repository)],
@@ -50,3 +56,10 @@ async def get_track_service(
     repo: Annotated[TrackRepository, Depends(get_track_repository)],
 ):
     return TrackService(repo=repo)
+
+
+async def get_sharing_service(
+    track_repo: Annotated[TrackRepository, Depends(get_track_repository)],
+    share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
+) -> SharingService:
+    return SharingService(track_repo=track_repo, share_repo=share_repo)
