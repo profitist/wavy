@@ -58,8 +58,7 @@ class TrackService:
     async def save_song_cover(self, cover: bytes, filename: str) -> Track:
         await self.s3_client.upload_bytes(cover, filename)
 
-    async def get_cover(self, id: uuid.UUID) -> bytes:
-        song_name = self.repo.get_by_id(id).album_cover_name
-        song_cover = await self.s3_client.download_bytes(song_name)
+    async def get_cover(self, id: str) -> bytes:
+        song_cover = await self.s3_client.download_bytes(f'{id}.png')
         return song_cover
 

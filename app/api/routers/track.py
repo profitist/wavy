@@ -90,12 +90,12 @@ async def upload_cover(
     return {"filename": filename, 'status': 'saved'}
 
 
-@router.post("/download-cover/{track_uuid}", status_code=status.HTTP_200_OK)
+@router.get("/download-cover/{track_uuid}", status_code=status.HTTP_200_OK)
 async def download_cover(
     track_uuid: str,
     service: TrackService = Depends(get_track_service),
 ) -> StreamingResponse:
-    file = service.s3_client.download_bytes(filename=track_uuid)
+    file = await service.s3_client.download_bytes(filename=track_uuid)
     mime, _ = mimetypes.guess_type(track_uuid)
     mime = mime or "application/octet-stream"
     return StreamingResponse(

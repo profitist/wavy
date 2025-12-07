@@ -49,7 +49,7 @@ async def get_track_repository(
 
 
 async def get_s3_client():
-    return S3Client(S3_ID, S3_SECRET, 'https://storage.yandexcloud.net', 'storage-s3')
+    return S3Client(access_key=S3_ID, secret_key=S3_SECRET, endpoint_url='https://storage.yandexcloud.net', bucket_name='storage-s3')
 
 
 async def get_track_service(
