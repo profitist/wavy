@@ -8,7 +8,7 @@ from app.schemas.track_schema import TrackCreateSchema, TrackSchema
 class ShareRequestSchema(BaseModel):
     track: TrackCreateSchema
     description: Optional[str] = None
-    model_config = ConfigDict(str_strip_whitespace=True)
+    model_config = ConfigDict(str_strip_whitespace=True, from_attributes=True)
 
 
 class SharedTrackResponseSchema(BaseModel):
