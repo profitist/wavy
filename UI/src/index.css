@@ -1,0 +1,1682 @@
+@font-face {
+  font-family: "TT Norms Pro";
+  src: url("assets/fonts/TTNormsPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TT Norms Pro";
+  src: url("assets/fonts/TTNormsPro-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TT Norms Pro";
+  src: url("assets/fonts/TTNormsPro-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* CSS-переменные и общие утилиты */
+:root {
+  --bg: #212121;
+  --white: #ffffff;
+  --turq: #00FFFF;
+  --muted: #bfbfbf;
+  --cover-gray: #5a5a5a;
+  --accent-red: #FF1818;
+}
+
+/* Общие свойства для экранов (центральные страницы) */
+.screen-profile,
+.screen-friends,
+.screen-favorites,
+.screen-settings,
+.screen-home,
+.screen-search {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Общий ресет для интерактивных элементов (кнопки, иконки) */
+button, .btn, .btn-icon {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Группировка центральной колонки (максимальная ширина) */
+.center-column,
+.profile-menu,
+.friends-search-block, .friends-add, .friends-list,
+.favorites-search-block, .favorites-list,
+.settings-footer, .settings-about,
+.home-share, .home-section-title, .home-notifications,
+.search-results, .share-list, .add-friend-list {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* все эраны скрыты по умолчанию */
+.screen {
+  display: none;
+  height: 100vh;          /* ровно высота экрана */
+  overflow: hidden;
+}
+
+.screen.active {
+  display: block;
+}
+
+.screen-register,
+.screen-login {
+  overflow-y: auto;   /* можно прокручивать вертикально */
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: "TT Norms Pro", system-ui, sans-serif;
+  color: var(--white);
+  background-color: var(--bg);
+}
+
+button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.reg-title {
+  font-size: 1.5rem;   /* 24px */
+  font-weight: 700;
+  text-align: center;
+  color: var(--turq);
+
+  margin: 24px 0;
+  margin-top: 150px;
+  margin-bottom: 120px;
+}
+
+/* базовый стиль кнопки */
+.btn {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 360px;
+
+  padding: 20px 20px;
+  border-radius: 18px;
+
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+
+  transition: 0.2s ease;
+}
+
+.auth-buttons{
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* основная кнопка */
+.btn--primary {
+  background: #ffffff;
+  color: #212121;
+}
+
+.btn--primary:active {
+  background: #dadada;
+}
+
+/* кнопка с обводкой */
+.btn--outline {
+  border: 2px solid #00FFFF;
+  color: #00FFFF;
+}
+
+.btn--outline:active {
+  background: rgba(0,0,0,0.08);
+}
+
+/* кнопка стрелка */
+.btn-icon {
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+  background: var(--white);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.2rem;
+  font-weight: 400;
+
+  transition: 0.2s ease;
+}
+
+.btn-icon:active {
+  background: #dadada;
+}
+
+/* Контейнер формы (регистрация / вход) */
+.reg-form{
+  width: auto;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-right: auto;
+}
+
+.reg-field input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 20px 16px;
+
+  border-radius: 16px;
+  border: 2px solid #00FFFF;
+
+  background: var(--bg);
+
+  font-size: 0.95rem;   /* около 15px */
+  font-weight: 400;
+  color: var(--turq);
+
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* подсказка */
+.reg-field input::placeholder {
+  color: var(--turq);
+}
+
+.auth-choice {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* логотип сверху, кнопки снизу */
+  min-height: 100vh;
+  padding: 40px 20px 32px;
+  box-sizing: border-box;
+}
+
+/* картинка на первом экране */
+.welcome-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* было center */
+  height: 100vh;
+  text-align: center;
+  padding: 40px 20px 32px; /* сверху/сбоку/снизу - чуть места для "подбородка" телефона */
+  box-sizing: border-box;
+}
+
+/* Общий стиль верхних панелей экранов */
+.screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reg-header {
+  padding: 20px;
+}
+
+.logo {
+  margin-top: 55%;
+  display: flex;
+  justify-content: center;
+}
+
+/* =====================
+   Экран профиля
+   ===================== */
+
+.screen-profile {
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.profile-header {
+  position: absolute;
+  width: auto;
+  display: flex;
+  width: 90%;
+  gap : auto;
+
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+/* центрируем заголовок между кнопками */
+.profile-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+}
+
+.profile-back {
+  flex-shrink: 0;
+}
+
+.profile-edit {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  color: #00FFFF;
+}
+
+/* блок аватара */
+.profile-avatar-block {
+  margin-bottom: 16px;
+
+}
+
+.profile-avatar-wrapper {
+  width: 100%;
+}
+
+/* сам аватар */
+.profile-avatar {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* имя пользователя */
+.profile-name {
+  margin: 0 0 24px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+/* меню профиля: три белых блока */
+.profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* один пункт меню */
+.profile-menu-item {
+  background: #ffffff;
+  color: #000000;
+  border-radius: 16px;
+  padding: 20px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* левая часть: иконка + текст */
+.profile-menu-left {
+  display: flex;
+  align-items: center;          /* вертикальное выравнивание по центру */
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.profile-menu-text {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* стрелка справа */
+.profile-menu-arrow {
+  color: #00FFFF;
+}
+
+/* =====================
+   Экран "Друзья"
+   ===================== */
+
+.screen-friends {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* шапка: назад + Друзья + пустой блок справа для симметрии */
+.friends-header {
+  padding: 16px 4px 12px;
+  margin-bottom: 8px;
+}
+
+.friends-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #00FFFF;
+}
+
+/* чтобы заголовок был строго по центру */
+.friends-back {
+  flex-shrink: 0;
+}
+
+.friends-header-spacer {
+  width: 44px; /* такая же ширина, как у кнопки назад */
+  flex-shrink: 0;
+}
+
+/* общая ширина контента по центру, как на других экранах */
+.friends-search-block,
+.friends-add,
+.friends-list {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* строка поиска */
+.friends-search-block {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.friends-search {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.friends-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #000;
+  outline: none;
+}
+
+/* карточка "Добавить друга" */
+.friends-add {
+  margin-top: 4px;
+  margin-bottom: 20px;
+
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 16px;
+
+  display: flex;
+  align-items: center;
+
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.friends-add-text {
+  font-size: 1rem;
+  color: #000;
+}
+
+/* список друзей */
+.friends-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.friends-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  gap: 20px;
+}
+
+.friends-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.friends-name {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+/* =====================
+   Экран "Любимое"
+   ===================== */
+
+.screen-favorites {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* Шапка: назад + Любимое + пустой блок справа */
+.favorites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 4px 12px;
+  margin-bottom: 30px;
+}
+
+.favorites-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #00FFFF;
+}
+
+.favorites-back {
+  flex-shrink: 0;
+}
+
+.favorites-header-spacer {
+  width: 44px;           /* чтобы заголовок был строго по центру */
+  flex-shrink: 0;
+}
+
+/* Поиск (как на "Друзья") */
+.favorites-search-block {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto 16px;
+}
+
+.favorites-search {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.favorites-search-icon {
+  font-size: 1.1rem;
+  color: #212121;
+}
+
+.favorites-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #000;
+  outline: none;
+}
+
+/* Список любимых треков */
+.favorites-list {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.favorites-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+}
+
+/* Обложка трека — серый скруглённый квадрат */
+.favorites-cover {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #5a5a5a;
+  flex-shrink: 0;
+}
+
+/* Текстовая часть */
+.favorites-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.favorites-track-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.favorites-track-artist {
+  font-size: 0.85rem;
+  color: #bfbfbf;
+}
+
+/* =====================
+   Экран "Настройки"
+   ===================== */
+
+.screen-settings {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  flex-direction: column;
+}
+
+.screen-settings.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Шапка: назад + Настройки + пустой блок справа */
+.settings-header {
+  padding: 16px 4px 12px;
+  margin-bottom: 16px;
+}
+
+.settings-title {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #00FFFF;
+}
+
+.settings-back {
+  flex-shrink: 0;
+}
+
+.settings-header-spacer {
+  width: 44px;
+  flex-shrink: 0;
+}
+
+/* Контент настроек */
+.settings-content {
+  max-width: 360px;
+  width: 100%;
+  margin: 50px auto 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Один пункт настройки */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-item-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.settings-item-icon {
+  font-size: 1.2rem;
+  margin-top: 2px;
+}
+
+.settings-item-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-item-title {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.settings-item-subtitle {
+  font-size: 0.85rem;
+  color: #bfbfbf;
+  margin-top: 2px;
+}
+
+/* Переключатель (тумблер) */
+/* базовый вид переключателя */
+.settings-toggle {
+  position: relative;
+  width: 52px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  padding: 3px;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  background: #555;                 /* по умолчанию выключен */
+  justify-content: flex-start;
+
+  transition: background 0.2s ease;
+}
+
+/* сам кружок */
+.settings-toggle-knob {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+  transform: translateX(0);         /* слева */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* состояние ВКЛЮЧЕНО */
+.settings-toggle[aria-pressed="true"] {
+  background: #51faff;              /* яркая бирюза */
+  justify-content: flex-end;
+}
+
+.settings-toggle[aria-pressed="true"] .settings-toggle-knob {
+  transform: translateX(0);         /* справа, тк flex-end */
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.7); /* свечение как на макете */
+}
+
+/* состояние ВЫКЛЮЧЕНО */
+.settings-toggle[aria-pressed="false"] {
+  background: #555;
+  justify-content: flex-start;
+}
+
+.settings-toggle[aria-pressed="false"] .settings-toggle-knob {
+  transform: translateX(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.settings-footer {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+
+  margin-top: 300px; /* весь подвал уезжает вниз */
+  display: flex;
+  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Кнопка "Выйти из аккаунта" */
+.btn--logout {
+  border-color: #FF1818;
+  color: #FF1818;
+  margin-top: auto;
+}
+
+/* Блок "О приложении" */
+.settings-about {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+
+  padding: 12px 0;
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-about-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.settings-about-title {
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.settings-about-subtitle {
+  font-size: 0.85rem;
+  color: #bfbfbf;
+}
+
+.settings-about-arrow {
+  font-size: 1.3rem;
+  color: #ffffff;
+}
+
+/* =====================
+   Главный экран
+   ===================== */
+
+.screen-home {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* --- шапка: аватар + поиск --- */
+
+.home-header {
+  padding: 16px 4px 12px;
+  margin-bottom: 8px;
+}
+
+/* кнопка-аватар слева */
+.home-avatar-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.home-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* кнопка поиска справа — использует .btn-icon */
+.home-search-btn {
+  height: 52px;
+  width: 52px;
+}
+
+/* --- блок "Поделиться" --- */
+
+.home-share {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto 24px;
+}
+
+/* иллюстрация сверху */
+.home-share-illustration {
+  margin-bottom: 12px;
+}
+
+.home-share-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* белая карточка "Поделиться" */
+.home-share-card {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home-share-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.home-share-icon {
+  font-size: 1.1rem;
+}
+
+.home-share-text {
+  font-size: 1rem;
+  color: #000000;
+}
+
+.home-share-arrow {
+  font-size: 1.2rem;
+  color: #00FFFF;
+}
+
+/* --- заголовок секции уведомлений --- */
+
+.home-section-title {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto 12px;
+
+  font-size: 1rem;
+  font-weight: 500;
+  color: #00FFFF;
+}
+
+/* --- список уведомлений --- */
+
+.home-notifications {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* один элемент списка */
+.home-notification-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* левая часть: обложка трека */
+.home-notification-left {
+  flex-shrink: 0;
+}
+
+/* контейнер обложки: сюда подставляется картинка трека */
+.home-notification-cover {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #5a5a5a; /* запасной фон, если нет картинки */
+}
+
+/* сама картинка трека */
+.home-notification-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* иконка play поверх */
+.home-notification-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+/* красная точка "новое" */
+.home-notification-dot {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3b30;
+  border: 2px solid #212121; /* обводка под цвет фона */
+}
+
+/* если уведомление не новое — просто не рендеришь этот div в HTML */
+
+/* центральная часть: название + автор */
+.home-notification-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-notification-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.home-notification-artist {
+  font-size: 0.85rem;
+  color: #bfbfbf;
+}
+
+/* правая часть: аватар друга + имя */
+.home-notification-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* центр по горизонтали */
+  justify-content: center;
+  gap: 6px;
+
+  width: 120px;            /* фиксированная ширина колонки */
+  margin-left: auto;
+}
+
+.home-notification-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.home-notification-sender {
+  font-size: 0.8rem;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* =====================
+   Экран "Найди свой трек"
+   ===================== */
+
+.screen-search {
+  min-height: 100vh;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  align-items: center;
+  gap: 30px;
+}
+
+/* шапка: назад + заголовок + спейсер справа */
+.search-header {
+  padding: 16px 4px 12px;
+  margin-bottom: 40px;
+}
+
+.search-title {
+  font-size: 1.5rem;   /* 24px */
+  font-weight: 700;
+  text-align: center;
+  color: #00FFFF;
+}
+
+.search-back {
+  flex-shrink: 0;
+}
+
+.search-header-spacer {
+  width: 44px;
+  flex-shrink: 0;
+}
+
+/* строка поиска */
+.search-bar-block {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto 16px;
+  margin-bottom: 40px;
+}
+
+.search-bar {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 10px 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-bar-icon {
+  font-size: 1.1rem;
+  color: #212121;
+}
+
+.search-bar-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #000;
+  outline: none;
+}
+
+/* список найденных треков */
+.search-results {
+  max-width: 360px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* одна строка трека */
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* обложка трека */
+.search-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #5a5a5a;
+  flex-shrink: 0;
+}
+
+/* центр: название + автор */
+.search-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-track-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.search-track-artist {
+  font-size: 0.85rem;
+  color: #bfbfbf;
+}
+
+/* сердечко избранного справа */
+.search-fav {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  padding: 0;
+  cursor: pointer;
+  color: #ffffff;   /* контурное (неактивное) */
+}
+
+/* =====================
+   Попап "Поделиться треком"
+   ===================== */
+
+/* оверлей на весь экран, по умолчанию скрыт */
+.share-popup-overlay,
+.add-friend-overlay {
+  position: fixed;
+  inset: 0;
+  padding: 16px;
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  display: none;                  /* включать через .active */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* видимый попап */
+.share-popup-overlay.active,
+.add-friend-overlay.active {
+  display: flex;
+}
+
+
+/* крестик закрытия */
+.share-popup-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  padding-left: 10px;
+  padding-bottom: 15px;
+
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #ffffff;
+  cursor: pointer;
+  background-color: #212121;
+}
+
+/* общий стиль шагов */
+.share-step {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+  overflow-y: auto;
+  padding-top: 12px; /* чтобы не залезать под крестик */
+}
+
+/* активный шаг */
+.share-step.active {
+  display: flex;
+}
+
+/* иллюстрация */
+.share-illustration {
+  width: 100%;
+  text-align: center;
+  margin-bottom: -30px;
+}
+
+.share-illustration img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* кнопки на стартовом шаге */
+.share-step-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 8px;
+}
+
+/* общие стили кнопок попапа */
+.share-btn-outline,
+.share-btn-primary {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 18px;
+
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+
+  box-sizing: border-box;
+  display: flex;                 /* добавили */
+  align-items: center;           /* текст и иконка по центру */
+  justify-content: center;
+  gap: 8px;
+}
+
+/* сама иконка */
+.share-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* неактивная кнопка */
+.share-btn-primary--disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* бирюзовая обводка */
+.share-btn-outline {
+  border-color: #00ffff;
+  color: #00ffff;
+}
+
+.share-btn-outline:active {
+  background: rgba(0, 255, 255, 0.08);
+}
+
+/* большая светлая кнопка "Отправить" */
+.share-btn-primary {
+  margin-top: 16px;
+  background: #ffffff;
+  color: #111111;
+  border-color: #ffffff;
+}
+
+.share-btn-primary:active {
+  background: #ffffff;
+}
+
+.share-btn-primary--disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;       /* клики не проходят */
+}
+
+/* ====== ШАГ 1 / 2: заголовок, поиск, списки ====== */
+
+.share-step-header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  width: 80%;
+  padding-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #212121;
+}
+
+.share-fixed-btn {
+  position: absolute;
+  bottom: 32px;
+  left: 24px;
+  right: 24px;
+  background-color: #212121;
+}
+
+.share-step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #00ffff;
+  color: #000000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.share-step-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.share-illustration-4{
+  margin-bottom: -300px;
+}
+
+/* строка поиска */
+.share-search {
+  margin-top: 60px;
+}
+
+.share-search-bar {
+  border-radius: 22px;
+  border: 2px solid #ffffff;
+
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #212121;
+}
+
+.share-search-icon {
+  font-size: 1.1rem;
+}
+
+.share-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #ffffff;
+  outline: none;
+}
+
+.share-search-input::placeholder {
+  color: #bfbfbf;
+}
+
+/* подзаголовок "Недавнее" */
+.share-subtitle {
+  margin: 16px 0 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #00ffff;
+}
+
+/* списки треков и друзей */
+.share-list {
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 80px;
+}
+
+/* одна строка списка */
+.share-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* обложка трека */
+.share-cover {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #5a5a5a;
+  flex-shrink: 0;
+}
+
+/* аватар друга */
+.share-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* текст внутри строки */
+.share-item-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.share-item-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.share-item-subtitle {
+  font-size: 0.9rem;
+  color: #bfbfbf;
+}
+
+/* кружок выбора справа (radio-like) */
+.share-radio {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  background: transparent;
+  cursor: pointer;
+
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* активный кружок (можно добавить/снимать класс из JS) */
+.share-radio--active {
+  border-color: #00ffff;
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.3);
+}
+
+/* ====== ШАГ 3: выбранные трек и друг ====== */
+
+.share-selected-card {
+  border-radius: 20px;
+  border: 2px solid #00ffff;
+  padding: 14px 16px;
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.share-selected-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #5a5a5a;
+  flex-shrink: 0;
+}
+
+.share-selected-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ====== ШАГ 4: успех ====== */
+
+.share-success-text {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* ========= Попап "Добавить друга" ========= */
+
+.add-friend-window,
+.share-popup-window{
+  width: 100%;
+  max-width: 420px;
+  height: 570px;
+  max-height: 90vh;
+
+  background: #212121;
+  border-radius: 32px;
+  padding: 24px;
+  box-sizing: border-box;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+/* крестик */
+.add-friend-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* картинка сверху */
+.add-friend-illustration {
+  width: 100%;
+  text-align: center;
+  margin-bottom: -40px;
+}
+
+.add-friend-illustration img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* тело попапа (скролл здесь) */
+.add-friend-body {
+  flex: 1;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* поиск */
+.add-friend-search {
+  margin-bottom: 16px;
+}
+
+.add-friend-search-bar {
+  border-radius: 22px;
+  border: 2px solid #ffffff;
+
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #212121;
+}
+
+.add-friend-search-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-friend-search-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.add-friend-search-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+  color: #ffffff;
+  outline: none;
+}
+
+.add-friend-search-input::placeholder {
+  color: #bfbfbf;
+}
+
+/* "Контакты" */
+.add-friend-subtitle {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #00ffff;
+}
+
+/* список контактов */
+.add-friend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* одна строка контакта */
+.add-friend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-friend-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.add-friend-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-friend-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.add-friend-login {
+  font-size: 0.9rem;
+  color: #bfbfbf;
+}
+
+/* кнопка "+" справа */
+.add-friend-plus {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  font-size: 1.4rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.add-friend-plus:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 360px) {
+  html { font-size: 15px; }
+}
+
+@media (min-width: 430px) {
+  html { font-size: 17px; }
+}
+
