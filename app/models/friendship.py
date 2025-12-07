@@ -8,20 +8,24 @@ from app.core.database import Base
 from app.models.friendship_status import FriendshipStatus
 
 
-class Friendship(Base):
-    __tablename__ = "friendship"
+# app/models/friendship.py
+import uuid
+from sqlalchemy import Table, Column, ForeignKey, Enum as SQLEnum
+from sqlalchemy.dialects.postgresql import UUID
+from app.core.database import Base
+from app.models.friendship_status import FriendshipStatus
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
-    sender_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
-    receiver_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("users.id"), nullable=False
-    )
-    status: Mapped[FriendshipStatus] = mapped_column(
-        Enum(FriendshipStatus, name="friendship_status_enum"),
+Friendship = Table(
+    "friendship",  # имя таблицы
+    Base.metadata,
+    Column("id", UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
+    Column("sender_id", UUID(as_uuid=True), ForeignKey("users.id"), nullable=False),
+    Column("receiver_id", UUID(as_uuid=True), ForeignKey("users.id"), nullable=False),
+    Column(
+        "status",
+        SQLEnum(FriendshipStatus, name="friendship_status_enum"),
         default=FriendshipStatus.PENDING,
         nullable=False,
-    )
-    sender: Mapped["User"] = relationship("User", foreign_keys=[sender_id])
-    receiver: Mapped["User"] = relationship("User", foreign_keys=[receiver_id])
+    ),
+)
+

@@ -14,6 +14,7 @@ router = APIRouter(
     tags=["Shared Track"],
 )
 
+
 @router.post("/", response_model=SharedTrackResponseSchema, status_code=status.HTTP_201_CREATED)
 async def share_music(
     request: ShareRequestSchema,

@@ -6,7 +6,7 @@ from app.schemas.user_schema import UserSchema
 class FriendshipSchema(BaseModel):
     sender: UserSchema
     receiver: UserSchema
-    status: bool
+    status: str
 
     model_config = ConfigDict(from_attributes=True)
 

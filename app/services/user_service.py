@@ -27,11 +27,11 @@ class UserService(BaseService[UserRepository]):
         existed_user = await self.repository.get_by_username(user.username)
         if existed_user:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User {user.username} already exists",
             )
-        # Создаём пользователя
         new_user_data = await self.repository.create(user.model_dump())
+        print(new_user_data.hashed_password)
         return UserSchema.model_validate(new_user_data)
 
     async def login_user(self, form_data: OAuth2PasswordRequestForm) -> dict:

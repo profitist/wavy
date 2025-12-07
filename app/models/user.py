@@ -23,7 +23,7 @@ class User(Base):
         String(100), nullable=True
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=True, default=datetime.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     shared_tracks: Mapped[List["SharedTrack"]] = relationship(
         "SharedTrack", back_populates="sender"
@@ -31,6 +31,10 @@ class User(Base):
     reactions: Mapped[List["Reaction"]] = relationship(
         "Reaction", back_populates="user"
     )
-    friends: Mapped[List["User"]] = relationship(
-        "User", back_populates="friends", secondary=Friendship
+    friends: Mapped[list["User"]] = relationship(
+        "User",
+        secondary=Friendship,
+        primaryjoin=lambda: Friendship.c.sender_id == User.id,
+        secondaryjoin=lambda: Friendship.c.receiver_id == User.id,
+        backref="friend_of",
     )

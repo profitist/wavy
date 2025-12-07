@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, ConfigDict
 class UserCreateSchema(BaseModel):
     username: str = Field(min_length=3, max_length=40)
     profile_picture_url: str = Field(min_length=3, max_length=150)
-    password: str = Field(min_length=8, max_length=40)
+    hashed_password: str = Field(min_length=8, max_length=40)
     description: str = Field(min_length=0, max_length=250)
     phone_number: str = Field(min_length=5, max_length=15)
     created_at: datetime = Field(default_factory=datetime.now)
