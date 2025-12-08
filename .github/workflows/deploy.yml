@@ -8,25 +8,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-
       - name: Connect and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
           script: |
             cd ~/my_app
-            
             git pull origin main
-            
             docker build -t my-fastapi-app .
-            
             docker stop fastapi-container || true
             docker rm fastapi-container || true
-            
-            docker run -d \
-              --name fastapi-container \
-              --restart always \
-              -p 80:8000 \
-              my-fastapi-app
+            docker run -d --name fastapi-container --restart always -p 80:8000 my-fastapi-app
