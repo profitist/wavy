@@ -21,4 +21,4 @@ jobs:
             docker build -t my-fastapi-app .
             docker stop fastapi-container || true
             docker rm fastapi-container || true
-            docker run -d --name fastapi-container --restart always -p 80:8000 my-fastapi-app
+            docker run -d --name fastapi-container --restart always --env-file .env -p 80:8000 my-fastapi-app
