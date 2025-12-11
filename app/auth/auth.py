@@ -23,6 +23,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Проверяет, соответствует ли введённый пароль сохранённому хешу.
     """
+    print(hash_password(plain_password), hashed_password)
     return pwd_context.verify(plain_password, hashed_password)
 
 
@@ -31,7 +32,7 @@ def create_access_token(data: dict):
     Создаёт JWT с payload (sub, role, id, exp).
     """
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=ALGORITHM)
 

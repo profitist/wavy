@@ -36,7 +36,7 @@ async def get_track(
 
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
-async def get_track_by_name(
+async def get_track_by_зфкфьуеук(
     title: Annotated[str, Query(min_length=2)] = None,
     author: Annotated[str, Query(min_length=2)] = None,
     offset: Annotated[int, Query(ge=0)] = 0,
