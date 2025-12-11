@@ -38,21 +38,18 @@ function setShareStep(step) {
     const num = stepEl.getAttribute('data-step');
     stepEl.classList.toggle('active', num === target);
   });
-}
+} 
 
 function openSharePopup(startStep = 0) {
-  const overlay = document.getElementById('share-popup');
-  if (!overlay) return;
-
-  overlay.classList.add('active');
+  if (!document.getElementById('share-popup')) return;
+  (document.getElementById('share-popup')).classList.add('active');
   setShareStep(startStep);
 }
 
 function closeSharePopup() {
-  const overlay = document.getElementById('share-popup');
-  if (!overlay) return;
+  if (!document.getElementById('share-popup')) return;
 
-  overlay.classList.remove('active');
+  (document.getElementById('share-popup')).classList.remove('active');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
