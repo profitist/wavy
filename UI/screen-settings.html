@@ -1,0 +1,91 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><link rel='stylesheet' href='src/index.css'></head>
+<body class="page-settings">
+<!-- Верхняя панель -->
+<header class="screen-header settings-header">
+<!-- Кнопка назад -->
+<button class="btn-icon settings-back" onclick="goTo('screen-profile.html')" type="button">
+<svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.825 13L13.425 18.6L12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825Z" fill="#1D1B20"></path>
+</svg>
+</button>
+<!-- Заголовок -->
+<div class="settings-title">Настройки</div>
+<!-- Спейсер справа для симметрии -->
+<div class="settings-header-spacer"></div>
+</header>
+<!-- Основной блок настроек -->
+<div class="settings-content">
+<!-- Пункт: Уведомления -->
+<div class="settings-item">
+<div class="settings-item-left">
+<span class="settings-item-icon"><svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 19V17H6V10C6 8.61667 6.41667 7.39167 7.25 6.325C8.08333 5.24167 9.16667 4.53333 10.5 4.2V3.5C10.5 3.08333 10.6417 2.73333 10.925 2.45C11.225 2.15 11.5833 2 12 2C12.4167 2 12.7667 2.15 13.05 2.45C13.35 2.73333 13.5 3.08333 13.5 3.5V4.2C14.8333 4.53333 15.9167 5.24167 16.75 6.325C17.5833 7.39167 18 8.61667 18 10V17H20V19H4ZM12 22C11.45 22 10.975 21.8083 10.575 21.425C10.1917 21.025 10 20.55 10 20H14C14 20.55 13.8 21.025 13.4 21.425C13.0167 21.8083 12.55 22 12 22ZM8 17H16V10C16 8.9 15.6083 7.95833 14.825 7.175C14.0417 6.39167 13.1 6 12 6C10.9 6 9.95833 6.39167 9.175 7.175C8.39167 7.95833 8 8.9 8 10V17Z" fill="white"></path>
+</svg>
+</span>
+<div class="settings-item-text">
+<div class="settings-item-title">Уведомления</div>
+</div>
+</div>
+<!-- Переключатель -->
+<button aria-pressed="true" class="settings-toggle" type="button">
+<span class="settings-toggle-knob"></span>
+</button>
+</div>
+<!-- Пункт: Друзья -->
+<div class="settings-item">
+<div class="settings-item-left">
+<div class="settings-item-text">
+<div class="settings-item-title">Друзья</div>
+<div class="settings-item-subtitle">Заявки в друзья</div>
+</div>
+</div>
+<button aria-pressed="true" class="settings-toggle" type="button">
+<span class="settings-toggle-knob"></span>
+</button>
+</div>
+<!-- Пункт: Оповещение -->
+<div class="settings-item">
+<div class="settings-item-left">
+<div class="settings-item-text">
+<div class="settings-item-title">Оповещение</div>
+<div class="settings-item-subtitle">Оповещение о новых функциях</div>
+</div>
+</div>
+<button aria-pressed="true" class="settings-toggle" type="button">
+<span class="settings-toggle-knob"></span>
+</button>
+</div>
+<!-- Пункт: Звук сообщения -->
+<div class="settings-item">
+<div class="settings-item-left">
+<span class="settings-item-icon"><svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M14 20.7246V18.6746C15.5 18.2413 16.7083 17.4079 17.625 16.1746C18.5417 14.9413 19 13.5413 19 11.9746C19 10.4079 18.5417 9.00794 17.625 7.77461C16.7083 6.54128 15.5 5.70794 14 5.27461V3.22461C16.0667 3.69128 17.75 4.73711 19.05 6.36211C20.35 7.98711 21 9.85794 21 11.9746C21 14.0913 20.35 15.9621 19.05 17.5871C17.75 19.2121 16.0667 20.2579 14 20.7246ZM3 14.9996V8.99961H7L12 3.99961V19.9996L7 14.9996H3ZM14 15.9996V7.94961C14.7833 8.31628 15.3958 8.86628 15.8375 9.59961C16.2792 10.3329 16.5 11.1329 16.5 11.9996C16.5 12.8496 16.2792 13.6371 15.8375 14.3621C15.3958 15.0871 14.7833 15.6329 14 15.9996ZM10 8.84961L7.85 10.9996H5V12.9996H7.85L10 15.1496V8.84961Z" fill="white"></path>
+</svg>
+</span>
+<div class="settings-item-text">
+<div class="settings-item-title">Звук сообщения</div>
+</div>
+</div>
+<button aria-pressed="true" class="settings-toggle" type="button">
+<span class="settings-toggle-knob"></span>
+</button>
+</div>
+</div>
+<div class="settings-footer">
+<button class="btn btn--outline btn--logout" onclick="goTo('screen-auth-choice.html')" type="button">
+                Выйти из аккаунта
+            </button>
+<!-- Блок "О приложении" -->
+<button class="settings-about" type="button">
+<div class="settings-about-text">
+<div class="settings-about-title">О приложении</div>
+<div class="settings-about-subtitle">Версия 1.0</div>
+</div>
+<div class="settings-about-arrow"><svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" fill="white"></path>
+</svg>
+</div>
+</button>
+</div>
+<script src="src/scripts/scripts.js"></script>
+</body></html>
