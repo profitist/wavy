@@ -14,5 +14,4 @@ class FriendshipSchema(BaseModel):
 class DeletedFriendshipSchema(BaseModel):
     from_user: UserSchema
     deleted_user: UserSchema
-
     model_config = ConfigDict(from_attributes=True)
