@@ -11,7 +11,7 @@ from app.config import JWT_SECRET_KEY, ALGORITHM
 router = APIRouter(prefix="/tokens", tags=["tokens"])
 
 
-@router.post("/tokens", response_model=None)
+@router.post("/tokens", response_model=dict)
 async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     user_service: UserService = Depends(get_user_service),

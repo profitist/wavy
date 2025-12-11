@@ -11,6 +11,7 @@ from app.models.user import User
 
 router = APIRouter()
 
+
 @router.get("/feed", response_model=List[SharedTrackResponseSchema])
 async def get_my_feed(
         share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
