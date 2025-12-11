@@ -44,7 +44,7 @@ class UserService(BaseService[UserRepository]):
                 detail="Incorrect username or password",
             )
         access_token = create_access_token(
-            data={"sub": user.username, "role": user.role, "uuid": user.id}
+            data={"sub": user.username, "role": user.role, "uuid": str(user.id)}
         )
         return {"access_token": access_token, "token_type": "bearer"}
 

@@ -24,10 +24,10 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(
-        data={"sub": db_user.username, "role": db_user.role, "id": db_user.id}
+        data={"sub": db_user.username, "role": db_user.role, "id": str(db_user.id)}
     )
     refresh_token = create_refresh_token(
-        data={"sub": db_user.username, "role": db_user.role, "id": db_user.id}
+        data={"sub": db_user.username, "role": db_user.role, "id": str(db_user.id)}
     )
     return {
         "access_token": access_token,
@@ -57,6 +57,6 @@ async def get_new_access_token(
     if db_user is None:
         raise credentials_exception
     access_token = create_access_token(
-        data={"sub": db_user.username, "role": db_user.role, "id": db_user.id}
+        data={"sub": db_user.username, "role": db_user.role, "id": str(db_user.id)}
     )
     return {"access_token": access_token, "token_type": "bearer"}
