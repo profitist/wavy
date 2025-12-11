@@ -50,6 +50,6 @@ async def edit_user(
     return edited_user
 
 
-@router.get("/me", status_code=status.HTTP_204_NO_CONTENT, response_model=UserSchema)
+@router.get("/me", status_code=status.HTTP_200_OK, response_model=UserSchema)
 async def get_me(current_user: UserModel = Depends(get_current_user)):
     return current_user
