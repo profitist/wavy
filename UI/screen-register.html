@@ -14,24 +14,25 @@
 <!-- Форма регистрации -->
 <form class="reg-form">
 <div class="reg-field">
-<input placeholder="Имя" type="text"/>
+<input name="name" placeholder="Имя" type="text"/>
 </div>
 <div class="reg-field">
-<input placeholder="Телефон" type="text"/>
+<input name="phone" placeholder="Телефон" type="text"/>
 </div>
 <div class="reg-field">
-<input placeholder="Логин" type="text"/>
+<input name="login" placeholder="Логин" type="text"/>
 </div>
 <div class="reg-field">
-<input placeholder="Пароль" type="password"/>
+<input name="password" placeholder="Пароль" type="password"/>
 </div>
 <div class="reg-field">
-<input placeholder="Повторите пароль" type="password"/>
+<input name="repeat" placeholder="Повторите пароль" type="password"/>
 </div>
 <!-- Кнопка -->
-<button class="btn btn--primary" onclick="goTo('screen-home.html')" type="button">
+<button class="btn btn--primary" type="button" id="btn-register">
                 Зарегистрироваться
             </button>
 </form>
 <script src="src/scripts/scripts.js"></script>
+<script src="src/scripts/register.js"></script>
 </body></html>
