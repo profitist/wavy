@@ -37,9 +37,9 @@ async def get_track(
     return result
 
 
-@router.get("/{name}", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
+@router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
 async def get_track_by_name(
-    name: str, service: TrackService = Depends(get_track_service)
+    name: Annotated[str, Query(min_length=2)], service: TrackService = Depends(get_track_service)
 ):
     db_tracks = await service.get_tracks_by_name(name)
     return db_tracks
