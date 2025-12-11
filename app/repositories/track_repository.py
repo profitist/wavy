@@ -10,17 +10,17 @@ class TrackRepository(BaseRepo[Track]):
     def __init__(self, db: AsyncSession):
         super().__init__(Track, db)
 
-    async def get_track_by_details(self, title: str, author: str) -> Optional[Track]:
-        query = select(self.model).where(
-            (self.model.title == title) & (self.model.author == author)
-        )
-        return await self.db.scalar(query)
+    async def get_track_by_details(
+        self, title: str, author: str, offset: int, limit: int
+    ) -> List[Track]:
+        filters = []
+        if title is not None:
+            filters.append(Track.title == title)
+        if author is not None:
+            filters.append(Track.author == author)
+        query = select(self.model).where(*filters).offset(offset).limit(limit)
+        return list((await self.db.scalars(query)).all())
 
     async def get_track_by_link(self, external_link: str) -> Optional[Track]:
         query = select(self.model).where(self.model.external_link == external_link)
         return await self.db.scalar(query)
-
-    async def get_track_by_name(self, track_name: str) -> List[Track]:
-        query = select(self.model).where(self.model.title == track_name)
-        result = await self.db.scalars(query)
-        return list(result)

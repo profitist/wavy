@@ -29,7 +29,7 @@ async def get_user(
 async def create_user(
     user: UserCreateSchema, service: Annotated[UserService, Depends(get_user_service)]
 ):
-    print('tnt')
+    print("tnt")
     db_user = await service.create_user(user)
     return db_user
 

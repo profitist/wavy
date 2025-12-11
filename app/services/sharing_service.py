@@ -11,16 +11,22 @@ if TYPE_CHECKING:
 
 
 class SharingService:
-    def __init__(self, track_repo: "TrackRepository", share_repo: "SharedTrackRepository", friend_repo: "FriendshipRepository"):
+    def __init__(
+        self,
+        track_repo: "TrackRepository",
+        share_repo: "SharedTrackRepository",
+        friend_repo: "FriendshipRepository",
+    ):
         self.track_repo = track_repo
         self.share_repo = share_repo
         self.friend_repo = friend_repo
 
-    async def share_track(self, user_id: uuid.UUID, data: ShareRequestSchema) -> SharedTrack:
+    async def share_track(
+        self, user_id: uuid.UUID, data: ShareRequestSchema
+    ) -> SharedTrack:
         track = data.track
         existing_track = await self.track_repo.get_track_by_details(
-            title=track.name,
-            author=track.author
+            title=track.name, author=track.author
         )
 
         if existing_track:
@@ -31,7 +37,7 @@ class SharingService:
                 "author": track.author,
                 "album_cover_url": track.album_cover_url,
                 "platform": track.music_platform,
-                "external_link": track.album_cover_url
+                "external_link": track.album_cover_url,
             }
             created_track = await self.track_repo.create(new_track_data)
             track_id = created_track.id
@@ -39,12 +45,14 @@ class SharingService:
         share_data = {
             "sender_id": user_id,
             "track_id": track_id,
-            "description": data.description
+            "description": data.description,
         }
         new_share = await self.share_repo.create(share_data)
         return await self.share_repo.get_by_id(new_share.id)
 
-    async def get_user_shares(self, user_id: uuid.UUID, limit: int = 20, offset: int = 0) -> list[SharedTrack]:
+    async def get_user_shares(
+        self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
+    ) -> list[SharedTrack]:
         return await self.share_repo.get_shared_tracks_by_user(user_id, limit, offset)
 
     async def get_share_by_id(self, share_id: uuid.UUID) -> Optional[SharedTrack]:
@@ -58,7 +66,9 @@ class SharingService:
             raise PermissionError("You can't delete other people share")
         return await self.share_repo.delete(share_id)
 
-    async def get_my_feed(self, user_id: uuid.UUID, limit: int = 20, offset: int = 0) -> list[SharedTrack]:
+    async def get_my_feed(
+        self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
+    ) -> list[SharedTrack]:
         friendships = await self.friend_repo.get_friends_list(user_id)
         friend_ids = []
         for friendship in friendships:
@@ -69,7 +79,5 @@ class SharingService:
         if not friend_ids:
             return []
         return await self.share_repo.get_last_tracks_feed(
-            user_ids = friend_ids,
-            limit = limit,
-            offset = offset
+            user_ids=friend_ids, limit=limit, offset=offset
         )

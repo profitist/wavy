@@ -14,9 +14,9 @@ router = APIRouter()
 
 @router.get("/feed", response_model=List[SharedTrackResponseSchema])
 async def get_my_feed(
-        share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
-        friend_repo: Annotated[FriendshipRepository, Depends(get_friendship_repository)],
-        current_user: Annotated[User, Depends(get_current_user)]
+    share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
+    friend_repo: Annotated[FriendshipRepository, Depends(get_friendship_repository)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     friends_relations = await friend_repo.get_friends_list(current_user.id)
     friends_ids = []
