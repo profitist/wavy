@@ -1,45 +1,93 @@
+/* ---------------------------------------------------
+   ФОНТЫ
+--------------------------------------------------- */
 @font-face {
   font-family: "TT Norms Pro";
   src: url("assets/fonts/TTNormsPro-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal;
 }
 
 @font-face {
   font-family: "TT Norms Pro";
   src: url("assets/fonts/TTNormsPro-Medium.ttf") format("truetype");
   font-weight: 500;
-  font-style: normal;
 }
 
 @font-face {
   font-family: "TT Norms Pro";
   src: url("assets/fonts/TTNormsPro-Bold.ttf") format("truetype");
   font-weight: 700;
-  font-style: normal;
 }
 
-/* CSS-переменные и общие утилиты */
+/* ---------------------------------------------------
+   ОСНОВНЫЕ ПЕРЕМЕННЫЕ
+--------------------------------------------------- */
 :root {
   --bg: #212121;
   --white: #ffffff;
-  --turq: #00FFFF;
+  --turq: #00ffff;
   --muted: #bfbfbf;
   --cover-gray: #5a5a5a;
-  --accent-red: #FF1818;
+  --accent-red: #ff1818;
 }
 
 /* Общие свойства для экранов (центральные страницы) */
-.screen-profile,
-.screen-friends,
-.screen-favorites,
-.screen-settings,
-.screen-home,
-.screen-search {
+.page-profile,
+.page-friends,
+.page-favorites,
+.page-settings,
+.page-home,
+.page-search {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
   overflow-y: auto;
+}
+
+
+/* ---------------------------------------------------
+   ГЛОБАЛЬНЫЙ РЕСЕТ
+--------------------------------------------------- */
+/* все эраны скрыты по умолчанию */
+.page {
+  display: none;
+  height: 100vh;          /* ровно высота экрана */
+  overflow: hidden;
+}
+
+.page.active {
+  display: block;
+}
+
+.page-register,
+.page-login {
+  overflow-y: auto;   /* можно прокручивать вертикально */
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: "TT Norms Pro", system-ui, sans-serif;
+  background-color: var(--bg);
+  color: var(--white);
+}
+
+button, a, input {
+  outline: none;
+}
+
+button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 /* Общий ресет для интерактивных элементов (кнопки, иконки) */
@@ -67,44 +115,6 @@ button, .btn, .btn-icon {
   margin: 0 auto;
 }
 
-/* все эраны скрыты по умолчанию */
-.screen {
-  display: none;
-  height: 100vh;          /* ровно высота экрана */
-  overflow: hidden;
-}
-
-.screen.active {
-  display: block;
-}
-
-.screen-register,
-.screen-login {
-  overflow-y: auto;   /* можно прокручивать вертикально */
-}
-
-html {
-    font-size: 16px;
-}
-
-body {
-  margin: 0;
-  font-family: "TT Norms Pro", system-ui, sans-serif;
-  color: var(--white);
-  background-color: var(--bg);
-}
-
-button {
-  border: none;
-  background: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
 .reg-title {
   font-size: 1.5rem;   /* 24px */
   font-weight: 700;
@@ -116,7 +126,10 @@ button {
   margin-bottom: 120px;
 }
 
-/* базовый стиль кнопки */
+/* ---------------------------------------------------
+   КНОПКИ
+--------------------------------------------------- */
+
 .btn {
   display: block;
   width: 100%;
@@ -259,11 +272,77 @@ button {
   justify-content: center;
 }
 
-/* =====================
-   Экран профиля
-   ===================== */
+/* ---------------------------------------------------
+   WELCOME / AUTH
+--------------------------------------------------- */
 
-.screen-profile {
+.page-welcome,
+.page-auth {
+  height: 100vh;
+  padding: 40px 20px 32px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  height: 100%;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 360px;
+  width: 100%;
+}
+
+/* ---------------------------------------------------
+   LOGIN / REGISTER
+--------------------------------------------------- */
+
+.reg-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--turq);
+  margin-top: 150px;
+  margin-bottom: 120px;
+}
+
+.reg-form {
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.reg-field input {
+  width: 100%;
+  padding: 20px 16px;
+  border-radius: 16px;
+  border: 2px solid var(--turq);
+  background: var(--bg);
+  color: var(--turq);
+}
+
+.reg-field input::placeholder {
+  color: var(--turq);
+}
+
+/* ---------------------------------------------------
+   PROFILE
+--------------------------------------------------- */
+
+.page-profile {
   flex-direction: column;
   min-height: 100vh;
   padding: 16px 16px 32px;
@@ -282,7 +361,6 @@ button {
   margin-bottom: 16px;
 }
 
-/* центрируем заголовок между кнопками */
 .profile-title {
   flex: 1;
   text-align: center;
@@ -377,18 +455,17 @@ button {
   color: #00FFFF;
 }
 
-/* =====================
-   Экран "Друзья"
-   ===================== */
+/* ---------------------------------------------------
+   FRIENDS
+--------------------------------------------------- */
 
-.screen-friends {
+.page-friends {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
-/* шапка: назад + Друзья + пустой блок справа для симметрии */
 .friends-header {
   padding: 16px 4px 12px;
   margin-bottom: 8px;
@@ -497,11 +574,11 @@ button {
   color: #ffffff;
 }
 
-/* =====================
-   Экран "Любимое"
-   ===================== */
+/* ---------------------------------------------------
+   FAVORITES
+--------------------------------------------------- */
 
-.screen-favorites {
+.page-favorites {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
@@ -613,20 +690,19 @@ button {
   color: #bfbfbf;
 }
 
-/* =====================
-   Экран "Настройки"
-   ===================== */
+/* ---------------------------------------------------
+   SETTINGS
+--------------------------------------------------- */
 
-.screen-settings {
+.page-settings {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
   overflow-y: auto;
-
   flex-direction: column;
 }
 
-.screen-settings.active {
+.page-settings.active {
   display: flex;
   flex-direction: column;
 }
@@ -809,11 +885,11 @@ button {
   color: #ffffff;
 }
 
-/* =====================
-   Главный экран
-   ===================== */
+/* ---------------------------------------------------
+   HOME
+--------------------------------------------------- */
 
-.screen-home {
+.page-home {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
@@ -1030,11 +1106,11 @@ button {
   white-space: nowrap;
 }
 
-/* =====================
-   Экран "Найди свой трек"
-   ===================== */
+/* ---------------------------------------------------
+   SEARCH
+--------------------------------------------------- */
 
-.screen-search {
+.page-search {
   min-height: 100vh;
   padding: 16px 16px 32px;
   box-sizing: border-box;
@@ -1156,11 +1232,10 @@ button {
   color: #ffffff;   /* контурное (неактивное) */
 }
 
-/* =====================
-   Попап "Поделиться треком"
-   ===================== */
+/* ---------------------------------------------------
+   POPUPS (общий стиль)
+--------------------------------------------------- */
 
-/* оверлей на весь экран, по умолчанию скрыт */
 .share-popup-overlay,
 .add-friend-overlay {
   position: fixed;
@@ -1181,7 +1256,6 @@ button {
 .add-friend-overlay.active {
   display: flex;
 }
-
 
 /* крестик закрытия */
 .share-popup-close {
