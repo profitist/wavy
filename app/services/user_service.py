@@ -30,6 +30,7 @@ class UserService(BaseService[UserRepository]):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User {user.username} already exists",
             )
+        user.hashed_password = hash_password(user.hashed_password)
         new_user_data = await self.repository.create(user.model_dump())
         print(new_user_data.hashed_password)
         new_user_data.hashed_password = hash_password(user.hashed_password)
