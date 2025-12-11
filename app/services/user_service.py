@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 from app.schemas.user_schema import UserSchema
 from app.repositories.user_repository import UserRepository
-from app.auth.auth import verify_password, create_access_token
+from app.auth.auth import verify_password, create_access_token, hash_password
 from app.services.base_service import BaseService
 from app.repositories.base_repository import BaseRepo
 from app.schemas.user_schema import UserUpdateSchema, UserCreateSchema
@@ -32,6 +32,7 @@ class UserService(BaseService[UserRepository]):
             )
         new_user_data = await self.repository.create(user.model_dump())
         print(new_user_data.hashed_password)
+        new_user_data.hashed_password = hash_password(user.hashed_password)
         return UserSchema.model_validate(new_user_data)
 
     async def login_user(self, form_data: OAuth2PasswordRequestForm) -> dict:
