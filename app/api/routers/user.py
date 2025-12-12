@@ -24,6 +24,14 @@ from app.config import JWT_SECRET_KEY, ALGORITHM
 
 
 router = APIRouter(prefix="/users", tags=["user"])
+profile_router = APIRouter("/profile")
+
+
+@profile_router.get("/", response_model=UserSchema)
+async def get_profile_info(
+    current_user: UserModel = Depends(get_current_user),
+):
+    return current_user
 
 
 @router.get(
@@ -47,7 +55,6 @@ async def get_user(
 async def create_user(
     user: UserCreateSchema, service: Annotated[UserService, Depends(get_user_service)]
 ):
-    print("tnt")
     db_user = await service.create_user(user)
     return db_user
 
@@ -66,11 +73,6 @@ async def edit_user(
         )
     edited_user = await service.update_user(user)
     return edited_user
-
-
-@router.get("/me", status_code=status.HTTP_200_OK, response_model=UserSchema)
-async def get_me(current_user: UserModel = Depends(get_current_user)):
-    return current_user
 
 
 @router.post("/token", response_model=dict)
