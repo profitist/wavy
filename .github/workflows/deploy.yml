@@ -17,8 +17,10 @@ jobs:
           port: 22
           script: |
             cd ~/my_app
+            git reset --hard HEAD
+            git clean -fd
             git pull origin main
-            docker build -t my-fastapi-app .
+            docker build --no-cache -t my-fastapi-app .
             docker stop fastapi-container || true
             docker rm fastapi-container || true
             docker run -d --name fastapi-container --restart always --env-file .env -p 80:8000 my-fastapi-app
