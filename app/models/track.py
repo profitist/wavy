@@ -18,6 +18,7 @@ class Track(Base):
     title: Mapped[str] = mapped_column(String, index=True)
     author: Mapped[str] = mapped_column(String, index=True)
     album_cover_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    platform: Mapped[MusicPlatform] = mapped_column(default=MusicPlatform.OTHER)
     external_link: Mapped[str] = mapped_column(String)
     shares: Mapped[List["SharedTrack"]] = relationship(
         "SharedTrack", back_populates="track"
