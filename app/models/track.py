@@ -6,6 +6,14 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 from app.models.music_platform import MusicPlatform
 
+import uuid
+from typing import List, Optional
+from sqlalchemy import String, Index, func
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.core.database import Base
+from app.models.music_platform import MusicPlatform
+
 
 class Track(Base):
     __tablename__ = "tracks"
@@ -18,6 +26,25 @@ class Track(Base):
     album_cover_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     platform: Mapped[MusicPlatform] = mapped_column(default=MusicPlatform.OTHER)
     external_link: Mapped[str] = mapped_column(String)
+
     shares: Mapped[List["SharedTrack"]] = relationship(
         "SharedTrack", back_populates="track"
+    )
+
+    # --- Добавляем GIN индекс ---
+    __table_args__ = (
+        Index(
+            'ix_tracks_full_text_search',
+            # Формируем вектор: (Русский Title + Author) || (Английский Title + Author)
+            (
+                func.to_tsvector('russian',
+                                 func.coalesce(title, '') + ' ' + func.coalesce(author,
+                                                                                ''))
+                .op('||')
+                (func.to_tsvector('english',
+                                  func.coalesce(title, '') + ' ' + func.coalesce(author,
+                                                                                 '')))
+            ),
+            postgresql_using='gin'
+        ),
     )

@@ -24,7 +24,7 @@ from app.config import JWT_SECRET_KEY, ALGORITHM
 
 
 router = APIRouter(prefix="/users", tags=["user"])
-profile_router = APIRouter("/profile")
+profile_router = APIRouter(prefix="/profile")
 
 
 @profile_router.get("/", response_model=UserSchema)
