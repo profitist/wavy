@@ -1,33 +1,62 @@
-async function login(userData){
+// ===============================
+//  ЭКСПОРТ КОНТЕЙНЕРА ДЛЯ ТОКЕНОВ
+// ===============================
+//export let token_dict = {
+//    access_token: "",
+//    refresh_token: "",
+//};
+
+// ===============================
+//  ФУНКЦИЯ ЛОГИНА
+// ===============================
+export async function login(userData) {
     try {
-        const response = await fetch("http://212.193.27.136/tokens/tokens/", {
-          method: "POST", // Метод запроса
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams(userData),
+        const response = await fetch("http://212.193.27.136/users/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(userData),
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('refresh_token', data.refresh_token);
+            return data;
+        }
+        else {
+            throw new Error('Login failed');
+        }
+
     } catch (err) {
-        console.error("Ошибка при создании пользователя:", err);
-        // пробрасываем ошибку наверх, чтобы вызывающий код мог обработать её
+        console.error("Ошибка входа:", err);
         throw err;
     }
 }
 
-const form = document.querySelector(".reg-form.center-column.card");
+// ===============================
+//  КОД ДЛЯ СТРАНИЦЫ ВХОДА
+//  Выполняется только если на странице есть нужные элементы
+// ===============================
 
-document.getElementById("btn-login").addEventListener("click", async () => {
-    console.log(form);
-    const formData = new FormData(form);
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector(".reg-form.center-column.card");
+    const btn = document.getElementById("btn-login");
 
-    const data = Object.fromEntries(formData.entries());
-    console.log(data);
+    // Если кнопки нет — значит это НЕ страница логина → просто выходим.
+    if (!form || !btn) return;
 
-    // переход после успешной регистрации
-    try {
-        await login(data);
-        goTo("screen-home.html");
-    } catch (err) {
-        alert("Ошибка входа, проверьте консоль.");
-    }
+    btn.addEventListener("click", async () => {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            await login(data);
+            goTo("screen-home.html");   // переход
+        } catch (err) {
+            alert("Ошибка входа, проверьте консоль.");
+        }
+    });
 });
