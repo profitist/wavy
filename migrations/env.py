@@ -9,6 +9,7 @@ from alembic import context
 
 import sys
 import os
+
 # 1. Импортируем dotenv
 from dotenv import load_dotenv
 

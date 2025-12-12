@@ -1,5 +1,6 @@
 from typing import Optional, List
-from sqlalchemy import select
+
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.track import Track
@@ -21,6 +22,25 @@ class TrackRepository(BaseRepo[Track]):
         query = select(self.model).where(*filters).offset(offset).limit(limit)
         response = await self.db.scalars(query)
         return list(response.all())
+
+    async def search_track(self, query: str, offset: int, limit: int) -> List[Track]:
+        vectors = func.to_tsvector(
+            "english",
+            func.coalesce(Track.title, "") + " " + func.coalesce(Track.author, ""),
+        )
+
+        search_query = func.plainto_tsquery("english", query)
+
+        stmt = (
+            select(Track)
+            .where(
+                vectors.op("@@")(search_query)  # Используем оператор @@
+            )
+            .limit(limit)
+        )
+
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())
 
     async def get_track_by_link(self, external_link: str) -> Optional[Track]:
         query = select(self.model).where(self.model.external_link == external_link)

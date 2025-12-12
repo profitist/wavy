@@ -36,16 +36,15 @@ async def get_track(
 
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
-async def get_track_by_details(
-    title: Annotated[str, Query(min_length=2)],
-    author: Annotated[str, Query(min_length=2)],
-    offset: Annotated[int, Query(default=0)],
-    limit: Annotated[int, Query(default=20)],
+async def search_tracks(
+    q: Annotated[
+        str | None, Query(min_length=2, description="Поиск по названию или автору")
+    ] = None,
+    offset: int = Query(default=0),
+    limit: int = Query(default=20),
     service: TrackService = Depends(get_track_service),
 ):
-    db_tracks = await service.get_tracks(
-        title=title, author=author, offset=offset, limit=limit
-    )
+    db_tracks = await service.search_tracks(search_query=q, offset=offset, limit=limit)
     return db_tracks
 
 
@@ -79,7 +78,7 @@ async def delete_track(
     return deleted_info
 
 
-@router.post("/upload-cover", status_code=status.HTTP_201_CREATED)
+@router.post("/upload-cover/", status_code=status.HTTP_201_CREATED)
 async def upload_cover(
     file: UploadFile = File(...),
     service: TrackService = Depends(get_track_service),
@@ -92,7 +91,7 @@ async def upload_cover(
     return {"filename": filename, "status": "saved"}
 
 
-@router.get("/download-cover/{track_uuid}", status_code=status.HTTP_200_OK)
+@router.get("/download-cover/{track_uuid}/", status_code=status.HTTP_200_OK)
 async def download_cover(
     track_uuid: str,
     service: TrackService = Depends(get_track_service),

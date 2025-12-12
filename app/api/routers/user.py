@@ -1,30 +1,24 @@
-from fastapi import Depends, APIRouter, Path, status, HTTPException
-from typing import Annotated, Any
-
-from app.schemas.user_schema import UserSchema, UserUpdateSchema, UserCreateSchema
-from app.core.dependencies import get_user_service
-from app.services.user_service import UserService
-from app.models.user import User as UserModel
-from app.auth.user_validation import get_current_user
-
 from typing import Annotated
 
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import Path
 from fastapi.security import OAuth2PasswordRequestForm
-from app.core.dependencies import get_user_service
-from app.services.user_service import UserService as UserService
+
 from app.auth.auth import (
     verify_password,
     create_access_token,
     create_refresh_token,
-    hash_password,
 )
+from app.auth.user_validation import get_current_user
 from app.config import JWT_SECRET_KEY, ALGORITHM
-
+from app.core.dependencies import get_user_service
+from app.models.user import User as UserModel
+from app.schemas.user_schema import UserSchema, UserUpdateSchema, UserCreateSchema
+from app.services.user_service import UserService as UserService
 
 router = APIRouter(prefix="/users", tags=["user"])
-profile_router = APIRouter(prefix="/profile")
+profile_router = APIRouter(prefix="/profile", tags=["user-profile"])
 
 
 @profile_router.get("/", response_model=UserSchema)
@@ -32,6 +26,21 @@ async def get_profile_info(
     current_user: UserModel = Depends(get_current_user),
 ):
     return current_user
+
+
+@profile_router.put("/", status_code=status.HTTP_200_OK, response_model=UserSchema)
+async def edit_user(
+    user: UserUpdateSchema,
+    service: Annotated[UserService, Depends(get_user_service)],
+    current_user: Annotated[UserModel, Depends(get_current_user)],
+):
+    if user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to edit this user",
+        )
+    edited_user = await service.update_user(user)
+    return edited_user
 
 
 @router.get(
@@ -57,22 +66,6 @@ async def create_user(
 ):
     db_user = await service.create_user(user)
     return db_user
-
-
-@router.put("/{username}/", status_code=status.HTTP_200_OK, response_model=UserSchema)
-async def edit_user(
-    username: str,
-    user: UserUpdateSchema,
-    service: Annotated[UserService, Depends(get_user_service)],
-    current_user: Annotated[UserModel, Depends(get_current_user)],
-):
-    if user.id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to edit this user",
-        )
-    edited_user = await service.update_user(user)
-    return edited_user
 
 
 @router.post("/token", response_model=dict)
