@@ -71,15 +71,3 @@ async def delete_share(
     except PermissionError:
         raise HTTPException(status_code=403, detail="not enough permissions")
     return None
-
-
-@router.get("/feed", response_model=list[SharedTrackResponseSchema])
-async def get_feed(
-    service: Annotated[SharingService, Depends(get_sharing_service)],
-    current_user: Annotated[User, Depends(get_current_user)],
-    limit: int = 20,
-    offset: int = 0,
-):
-    return await service.get_my_feed(
-        user_id=current_user.id, limit=limit, offset=offset
-    )

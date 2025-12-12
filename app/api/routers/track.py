@@ -37,13 +37,13 @@ async def get_track(
 
 @router.get("/", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
 async def get_track_by_details(
-    title: Annotated[str, Query(min_length=2)] = None,
-    author: Annotated[str, Query(min_length=2)] = None,
-    offset: Annotated[int, Query(ge=0)] = 0,
-    limit: Annotated[int, Query(gt=0)] = 20,
+    title: Annotated[str, Query(min_length=2)],
+    author: Annotated[str, Query(min_length=2)],
+    offset: Annotated[int, Query(default=0)],
+    limit: Annotated[int, Query(default=20)],
     service: TrackService = Depends(get_track_service),
 ):
-    db_tracks = await service.get_tracks_by_parameters(
+    db_tracks = await service.get_tracks(
         title=title, author=author, offset=offset, limit=limit
     )
     return db_tracks

@@ -65,3 +65,4 @@ class TrackService:
     async def get_cover(self, id: str) -> bytes:
         song_cover = await self.s3_client.download_bytes(f"{id}.png")
         return song_cover
+

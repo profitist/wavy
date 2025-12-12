@@ -53,7 +53,7 @@ async def get_friendship_service(
 async def get_track_repository(
     db: Annotated[AsyncSession, Depends(get_async_session)],
 ):
-    return TrackRepository(db=db)
+    return FriendshipRepository(db=db)
 
 
 async def get_s3_client():
@@ -75,8 +75,5 @@ async def get_track_service(
 async def get_sharing_service(
     track_repo: Annotated[TrackRepository, Depends(get_track_repository)],
     share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
-    friend_repo: Annotated[FriendshipRepository, Depends(get_friendship_repository)],
 ) -> SharingService:
-    return SharingService(
-        track_repo=track_repo, share_repo=share_repo, friend_repo=friend_repo
-    )
+    return SharingService(track_repo=track_repo, share_repo=share_repo)

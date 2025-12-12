@@ -7,19 +7,14 @@ from app.models.shared_track import SharedTrack
 if TYPE_CHECKING:
     from app.repositories.track_repository import TrackRepository
     from app.repositories.shared_track_repository import SharedTrackRepository
-    from app.repositories.friendship_repository import FriendshipRepository
 
 
 class SharingService:
     def __init__(
-        self,
-        track_repo: "TrackRepository",
-        share_repo: "SharedTrackRepository",
-        friend_repo: "FriendshipRepository",
+        self, track_repo: "TrackRepository", share_repo: "SharedTrackRepository"
     ):
         self.track_repo = track_repo
         self.share_repo = share_repo
-        self.friend_repo = friend_repo
 
     async def share_track(
         self, user_id: uuid.UUID, data: ShareRequestSchema
@@ -65,19 +60,3 @@ class SharingService:
         if share.sender_id != user_id:
             raise PermissionError("You can't delete other people share")
         return await self.share_repo.delete(share_id)
-
-    async def get_my_feed(
-        self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
-    ) -> list[SharedTrack]:
-        friendships = await self.friend_repo.get_friends_list(user_id)
-        friend_ids = []
-        for friendship in friendships:
-            if friendship.sender_id == user_id:
-                friend_ids.append(friendship.receiver_id)
-            else:
-                friend_ids.append(friendship.sender_id)
-        if not friend_ids:
-            return []
-        return await self.share_repo.get_last_tracks_feed(
-            user_ids=friend_ids, limit=limit, offset=offset
-        )
