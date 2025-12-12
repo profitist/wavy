@@ -1,3 +1,4 @@
+from operator import or_
 from typing import Optional, List
 
 from sqlalchemy import select, func
@@ -24,20 +25,17 @@ class TrackRepository(BaseRepo[Track]):
         return list(response.all())
 
     async def search_track(self, query: str, offset: int, limit: int) -> List[Track]:
-        vectors = func.to_tsvector(
-            "english",
-            func.coalesce(Track.title, "") + " " + func.coalesce(Track.author, ""),
-        )
+        stmt = select(Track)
+        if query:
+            search_pattern = f"%{query}%"
 
-        search_query = func.plainto_tsquery("english", query)
-
-        stmt = (
-            select(Track)
-            .where(
-                vectors.op("@@")(search_query)  # Используем оператор @@
+            stmt = stmt.where(
+                or_(
+                    Track.title.ilike(search_pattern),
+                    Track.author.ilike(search_pattern),
+                )
             )
-            .limit(limit)
-        )
+        stmt = stmt.offset(offset).limit(limit)
 
         result = await self.db.execute(stmt)
         return list(result.scalars().all())

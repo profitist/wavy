@@ -68,16 +68,6 @@ async def edit_track(
     return new_track_info
 
 
-@router.delete("/{track_id}", response_model=dict, status_code=status.HTTP_200_OK)
-async def delete_track(
-    track_id: uuid.UUID,
-    service: TrackService = Depends(get_track_service),
-    _: User = Depends(get_current_admin),
-):
-    deleted_info = service.delete_track(track_id)
-    return deleted_info
-
-
 @router.post("/upload-cover/", status_code=status.HTTP_201_CREATED)
 async def upload_cover(
     file: UploadFile = File(...),
@@ -103,3 +93,13 @@ async def download_cover(
         iter([file]),
         media_type=mime,
     )
+
+
+@router.delete("/{track_id}", response_model=dict, status_code=status.HTTP_200_OK)
+async def delete_track(
+    track_id: uuid.UUID,
+    service: TrackService = Depends(get_track_service),
+    _: User = Depends(get_current_admin),
+):
+    deleted_info = service.delete_track(track_id)
+    return deleted_info

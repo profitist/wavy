@@ -53,7 +53,7 @@ async def get_friendship_service(
 async def get_track_repository(
     db: Annotated[AsyncSession, Depends(get_async_session)],
 ):
-    return FriendshipRepository(db=db)
+    return TrackRepository(db=db)
 
 
 async def get_s3_client():
