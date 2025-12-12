@@ -24,17 +24,17 @@ class TrackService:
             )
         return result
 
-    async def get_tracks(self, offset: int, limit: int) -> List[Track]:
-        tracks = await self.repo.get_all(skip=offset, limit=limit)
+    async def get_tracks(
+        self, title: str | None, author: str | None, offset: int, limit: int
+    ) -> List[Track]:
+        tracks = await self.repo.get_tracks_by_details(
+            title=title, author=author, offset=offset, limit=limit
+        )
         return tracks
 
     async def create_track(self, track: TrackCreateSchema) -> Track:
         db_track = await self.repo.create(dict(track))
         return db_track
-
-    async def get_tracks_by_name(self, name: str) -> List[Track]:
-        db_tracks = await self.repo.get_track_by_name(name)
-        return db_tracks
 
     async def edit_track_info(
         self, track_id: uuid.UUID, track: TrackUpdateSchema
@@ -59,6 +59,5 @@ class TrackService:
         await self.s3_client.upload_bytes(cover, filename)
 
     async def get_cover(self, id: str) -> bytes:
-        song_cover = await self.s3_client.download_bytes(f'{id}.png')
+        song_cover = await self.s3_client.download_bytes(f"{id}.png")
         return song_cover
-

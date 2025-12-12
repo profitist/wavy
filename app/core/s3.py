@@ -64,7 +64,7 @@ class S3Client:
         Скачивает объект в виде байтов.
         """
         try:
-            filename += '.png'
+            filename += ".png"
             async with self.get_client() as client:
                 response = await client.get_object(
                     Bucket=self.bucket_name,
