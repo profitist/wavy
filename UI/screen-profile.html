@@ -82,7 +82,7 @@
 <script type="module">
 async function get_name(token) {
     try {
-        const response = await fetch("http://212.193.27.136/users/me", {
+        const response = await fetch("http://212.193.27.136/profile/", {
             method: "GET",
             headers: { Authorization : "Bearer " + token}
         });
