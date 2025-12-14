@@ -4,7 +4,7 @@ async function createUser(userData) {
         const response = await fetch("http://212.193.27.136/users/", {
           method: "POST", // Метод запроса
           headers: {
-            "Content-Type": "application/json", // Указываем, что отправляем JSON
+            "Content-Type" : "application/json", // Указываем, что отправляем JSON
           },
           body: JSON.stringify(userData), // Преобразуем объект в строку JSON
         });

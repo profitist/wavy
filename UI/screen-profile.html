@@ -63,4 +63,31 @@
 </button>
 </nav>
 <script src="src/scripts/scripts.js"></script>
+<script type="module">
+async function get_name(token) {
+    try {
+        const response = await fetch("http://212.193.27.136/profile/", {
+            method: "GET",
+            headers: { Authorization : "Bearer " + token}
+        });
+
+        if (!response.ok) {
+            console.log(token);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Преобразуем ответ в JSON
+        return data.username;
+    } catch (err) {
+        console.error("Ошибка при обновлении данных:", err);
+        throw err;
+    }
+}
+const token = localStorage.getItem('access_token')
+get_name(token)
+    .then(username => {
+        document.querySelector(".profile-name").innerHTML = username;
+    })
+    .catch(err => console.error(err));
+</script>
 </body></html>
