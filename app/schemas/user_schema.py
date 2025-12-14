@@ -14,7 +14,7 @@ class UserCreateSchema(BaseModel):
 
 
 class UserSchema(BaseModel):
-    # id: uuid.UUID = Field(default_factory=uuid.uuid4)
+    id: uuid.UUID
     username: str = Field(min_length=3, max_length=40)
     description: str = Field(min_length=0, max_length=250)
     phone_number: str = Field(min_length=5, max_length=15)

@@ -4,6 +4,7 @@ from app.schemas.user_schema import UserSchema
 
 
 class FriendshipSchema(BaseModel):
+    friendship_id: uuid.UUID
     sender: UserSchema
     receiver: UserSchema
     status: str

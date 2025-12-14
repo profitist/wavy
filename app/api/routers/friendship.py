@@ -22,12 +22,12 @@ async def get_friends(
     return friends
 
 
-@router.get("/pending", response_model=FriendshipSchema)
+@router.get("/pending", response_model=List[FriendshipSchema])
 async def get_pending_requests(
     current_user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[FriendshipService, Depends(get_friendship_service)],
 ):
-    pending_requests = service.get_pending_requests(current_user)
+    pending_requests = await service.get_pending_requests(current_user)
     return pending_requests
 
 

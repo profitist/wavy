@@ -1,11 +1,12 @@
 import uuid
-from typing import Optional, List
+from typing import Optional, List, Mapping
 
 from fastapi import HTTPException, status
-from sqlalchemy import select, or_, and_
+from sqlalchemy import select, or_, and_, insert, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, aliased
 
+from app.models import User
 from app.models.friendship import Friendship
 from app.models.friendship_status import FriendshipStatus
 from app.repositories.base_repository import BaseRepo
@@ -16,80 +17,144 @@ class FriendshipRepository(BaseRepo[Friendship]):
         super().__init__(Friendship, db)
 
     async def create_request(
-        self, from_user: uuid.UUID, to_user: uuid.UUID
-    ) -> Optional[Friendship]:
-        data = {
-            "sender_id": from_user,
-            "receiver_id": to_user,
-            "status": FriendshipStatus.PENDING,
-        }
+            self, from_user: uuid.UUID, to_user: uuid.UUID
+    ) -> Optional[Mapping]:
+        stmt = (
+            insert(self.model)
+            .values(
+                sender_id=from_user,
+                receiver_id=to_user,
+                status=FriendshipStatus.PENDING,
+            )
+            .returning(self.model)
+        )
         try:
-            await self.create(data)
-        except Exception as e:
+            result = await self.db.execute(stmt)
+            await self.db.commit()
+            return result.mappings().first()
+        except Exception:
+            await self.db.rollback()
             return None
 
     async def update_status(
-        self,
-        from_user: uuid.UUID,
-        to_user: uuid.UUID,
-        friendship_status: FriendshipStatus,
-    ) -> Friendship:
-        friendship = await self.get_friendship_between(from_user, to_user)
-        if friendship is None:
+            self,
+            from_user: uuid.UUID,
+            to_user: uuid.UUID,
+            friendship_status: FriendshipStatus,
+    ) -> Mapping:
+        stmt = (
+            update(self.model)
+            .where(
+                or_(
+                    and_(
+                        self.model.c.sender_id == from_user,
+                        self.model.c.receiver_id == to_user,
+                    ),
+                    and_(
+                        self.model.c.sender_id == to_user,
+                        self.model.c.receiver_id == from_user,
+                    ),
+                )
+            )
+            .values(status=friendship_status)
+            .returning(self.model)
+        )
+        result = await self.db.execute(stmt)
+        if result.rowcount == 0:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Friendship does not exist",
             )
-        data = {
-            "sender_id": from_user,
-            "receiver_id": to_user,
-            "status": friendship_status,
-        }
-        db_friendship = await self.update(friendship.id, data)
-        return db_friendship
+        await self.db.commit()
+        return result.mappings().first()
 
     async def get_friendship_between(
-        self, user_id_1: uuid.UUID, user_id_2: uuid.UUID
-    ) -> Optional[Friendship]:
-        query = select(self.model).where(
+            self, user_id_1: uuid.UUID, user_id_2: uuid.UUID
+    ) -> Optional[Mapping]:
+        stmt = select(self.model).where(
             or_(
                 and_(
-                    self.model.sender_id == user_id_1,
-                    self.model.receiver_id == user_id_2,
+                    self.model.c.sender_id == user_id_1,
+                    self.model.c.receiver_id == user_id_2,
                 ),
                 and_(
-                    self.model.sender_id == user_id_2,
-                    self.model.receiver_id == user_id_1,
+                    self.model.c.sender_id == user_id_2,
+                    self.model.c.receiver_id == user_id_1,
                 ),
             )
         )
-        return await self.db.scalar(query)
 
-    async def get_pending_requests(self, user_id: uuid.UUID) -> List[Friendship]:
-        query = (
-            select(self.model)
-            .where(
-                self.model.receiver_id == user_id,
-                self.model.status == FriendshipStatus.PENDING,
+        result = await self.db.execute(stmt)
+        return result.mappings().first()
+
+    async def get_pending_requests(self, user_id: uuid.UUID) -> list[
+        dict]:
+        sender_alias = aliased(User)
+        receiver_alias = aliased(User)
+
+        stmt = (
+            select(
+                Friendship.c.id.label("friendship_id"),
+                sender_alias.id.label("sender_id"),
+                sender_alias.username.label("sender_username"),
+                sender_alias.description.label("sender_description"),
+                sender_alias.phone_number.label("sender_phone_number"),
+                sender_alias.profile_picture_url.label("sender_profile_picture_url"),
+                receiver_alias.id.label("receiver_id"),
+                receiver_alias.username.label("receiver_username"),
+                receiver_alias.description.label("receiver_description"),
+                receiver_alias.phone_number.label("receiver_phone_number"),
+                receiver_alias.profile_picture_url.label("receiver_profile_picture_url"),
             )
-            .options(selectinload(self.model.sender))
-        )
-        result = await self.db.scalars(query)
-        return list(result.all())
-
-    async def get_friends_list(self, user_id: uuid.UUID) -> List[Friendship]:
-        query = (
-            select(self.model)
+            .join(sender_alias, Friendship.c.sender_id == sender_alias.id)
+            .join(receiver_alias, Friendship.c.receiver_id == receiver_alias.id)
             .where(
                 and_(
-                    or_(
-                        self.model.sender_id == user_id,
-                        self.model.receiver_id == user_id,
-                    )
-                ),
-                FriendshipStatus.ACCEPTED == self.model.status,
+                    Friendship.c.receiver_id == user_id,
+                    Friendship.c.status == FriendshipStatus.PENDING
+                )
             )
-            .options(selectinload(self.model.sender), selectinload(self.model.receiver))
         )
-        result = await self.db.scalars(query)
-        return list(result.all())
+
+        result = await self.db.execute(stmt)
+        pending_requests = []
+
+        for row in result.all():
+            friendship_dict = {
+                "friendship_id": row.friendship_id,
+                "sender": {
+                    "id": row.sender_id,
+                    "username": row.sender_username,
+                    "description": row.sender_description,
+                    "phone_number": row.sender_phone_number,
+                    "profile_picture_url": row.sender_profile_picture_url,
+                },
+                "receiver": {
+                    "id": row.receiver_id,
+                    "username": row.receiver_username,
+                    "description": row.receiver_description,
+                    "phone_number": row.receiver_phone_number,
+                    "profile_picture_url": row.receiver_profile_picture_url,
+                },
+                "status": FriendshipStatus.PENDING
+            }
+            pending_requests.append(friendship_dict)
+
+        return pending_requests
+
+    async def get_friends_list(
+            self, user_id: uuid.UUID
+    ) -> List[Mapping]:
+        stmt = select(self.model).where(
+            and_(
+                or_(
+                    self.model.c.sender_id == user_id,
+                    self.model.c.receiver_id == user_id,
+                ),
+                self.model.c.status == FriendshipStatus.ACCEPTED,
+            )
+        )
+
+        result = await self.db.execute(stmt)
+        return list(result.mappings().all())
+
