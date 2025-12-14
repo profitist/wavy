@@ -2,8 +2,16 @@ import mimetypes
 import os
 import uuid
 
-from fastapi import Depends, APIRouter, Path, status, Query, HTTPException, UploadFile, \
-    File
+from fastapi import (
+    Depends,
+    APIRouter,
+    Path,
+    status,
+    Query,
+    HTTPException,
+    UploadFile,
+    File,
+)
 from typing import Annotated, List
 
 from app.models.user import User
@@ -65,9 +73,7 @@ async def edit_track(
     return new_track_info
 
 
-@router.delete(
-    "/{track_id}", response_model=dict, status_code=status.HTTP_200_OK
-)
+@router.delete("/{track_id}", response_model=dict, status_code=status.HTTP_200_OK)
 async def delete_track(
     track_id: uuid.UUID,
     service: TrackService = Depends(get_track_service),
@@ -87,7 +93,7 @@ async def upload_cover(
     ext = os.path.splitext(file.filename)[1]
     filename = f"{uuid.uuid4()}{ext}"
     await service.save_song_cover(file_bytes, filename)
-    return {"filename": filename, 'status': 'saved'}
+    return {"filename": filename, "status": "saved"}
 
 
 @router.get("/download-cover/{track_uuid}", status_code=status.HTTP_200_OK)
@@ -102,5 +108,3 @@ async def download_cover(
         iter([file]),
         media_type=mime,
     )
-
-
