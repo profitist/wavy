@@ -4,20 +4,28 @@ import os
 from typing import AsyncGenerator
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-os.environ["DATABASE_URL"] = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/wavy_test"
+
+os.environ["DATABASE_URL"] = (
+    "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/wavy_test"
+)
 from main import app
 from app.core.database import Base, get_session
 from app.models import *
 
 DATABASE_URL_TEST = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/test"
 engine_test = create_async_engine(DATABASE_URL_TEST)
-sessionmaker_test = async_sessionmaker(engine_test, class_=AsyncSession, expire_on_commit=False)
+sessionmaker_test = async_sessionmaker(
+    engine_test, class_=AsyncSession, expire_on_commit=False
+)
+
 
 async def override_get_session() -> AsyncGenerator[AsyncSession, None]:
     async with sessionmaker_test() as session:
         yield session
 
+
 app.dependency_overrides[get_session] = override_get_session
+
 
 @pytest.fixture
 def event_loop():
@@ -48,7 +56,7 @@ async def user_token_factory(ac: AsyncClient):
             "username": username,
             "hashed_password": "pupupupupupupuppu",
             "description": "lalalalala",
-            "phone_number": "88005553535"
+            "phone_number": "88005553535",
         }
         await ac.post("/user/", json=payload)
 
@@ -57,4 +65,5 @@ async def user_token_factory(ac: AsyncClient):
         assert response.status_code == 200
         token = response.json()["access_token"]
         return token, payload
+
     return create_user()
