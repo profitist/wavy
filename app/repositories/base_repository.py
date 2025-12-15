@@ -38,21 +38,16 @@ class BaseRepo(Generic[model_type]):
     async def update(
         self, id: uuid.UUID, attributes: dict[str, Any]
     ) -> Optional[model_type]:
-        query = (
-            update(self.model)
-            .where(self.model.id == id)
-            .values(**attributes)
-            .execution_options(synchronize_session="fetch")
-        )
+        stmt = update(self.model).where(self.model.id == id).values(**attributes)
         try:
-            result = await self.db.execute(query)
-            if result.rowcount:
+            result = await self.db.execute(stmt)
+            if result.rowcount == 0:
                 return None
             await self.db.commit()
             return await self.get_by_id(id)
-        except SQLAlchemyError as e:
+        except SQLAlchemyError:
             await self.db.rollback()
-            raise e
+            raise
 
     async def delete(self, id: uuid.UUID) -> bool:
         query = delete(self.model).where(self.model.id == id)

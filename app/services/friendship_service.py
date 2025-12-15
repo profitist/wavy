@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from typing import Annotated, List
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, status
 from starlette import status
 
 from app.models.user import User
@@ -17,15 +17,22 @@ class FriendshipService(BaseService[FriendshipRepository]):
         super().__init__(repo)
 
     async def sent_request(self, from_user: User, to_user: User) -> FriendshipSchema:
+        db_friendship = await self.repository.get_friendship_info_between(
+            from_user.id, to_user.id
+        )
+        if db_friendship is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Friendship request already exists",
+            )
         result = await self.repository.create_request(from_user.id, to_user.id)
-        print(result)
         if result is None:
             raise HTTPException(status_code=400)
         return FriendshipSchema(
             friendship_id=result.id,
             sender=from_user,
             receiver=to_user,
-            status=FriendshipStatus.PENDING
+            status=FriendshipStatus.PENDING,
         )
 
     async def accept_request(self, from_user: User, to_user: User) -> FriendshipSchema:
@@ -35,7 +42,8 @@ class FriendshipService(BaseService[FriendshipRepository]):
         return FriendshipSchema(
             friendship_id=result.id,
             sender=from_user,
-            receiver=FriendshipStatus.ACCEPTED,
+            receiver=to_user,
+            status=FriendshipStatus.ACCEPTED,
         )
 
     async def reject_request(self, from_user: User, to_user: User) -> FriendshipSchema:
@@ -46,24 +54,22 @@ class FriendshipService(BaseService[FriendshipRepository]):
             friendship_id=result.id,
             sender=from_user,
             receiver=to_user,
-            status=FriendshipStatus.REJECTED
+            status=FriendshipStatus.REJECTED,
         )
 
     async def get_friends(self, from_user: User) -> List[FriendshipSchema]:
-        result = await self.repository.get_friends_list(from_user.id)
+        result = await self.repository.get_requests_with_status(
+            from_user.id, FriendshipStatus.ACCEPTED
+        )
         friends = []
         for request in result:
-            friends.append(
-                FriendshipSchema(
-                    sender=request.sender,
-                    receiver=request.receiver,
-                    status=FriendshipStatus.ACCEPTED,
-                )
-            )
+            friends.append(FriendshipSchema(**request))
         return friends
 
     async def get_pending_requests(self, from_user: User) -> List[FriendshipSchema]:
-        result = await self.repository.get_pending_requests(from_user.id)
+        result = await self.repository.get_requests_with_status(
+            from_user.id, FriendshipStatus.PENDING
+        )
         pending_requests = []
         for request in result:
             pending_requests.append(FriendshipSchema(**request))
@@ -72,7 +78,7 @@ class FriendshipService(BaseService[FriendshipRepository]):
     async def delete_friend(
         self, from_user: User, user_to_delete: User
     ) -> DeletedFriendshipSchema:
-        db_friendship = await self.repository.get_friendship_between(
+        db_friendship = await self.repository.get_friendship_info_between(
             from_user.id, user_to_delete.id
         )
         if db_friendship is None:

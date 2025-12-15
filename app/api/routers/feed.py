@@ -16,10 +16,8 @@ async def get_my_feed(
     service: Annotated[SharingService, Depends(get_shared_track_repository)],
     current_user: Annotated[User, Depends(get_current_user)],
     limit: int = 20,
-    offset: int = 0
+    offset: int = 0,
 ):
     return await service.get_my_feed(
-        user_id=current_user.id,
-        limit=limit,
-        offset=offset
+        user_id=current_user.id, limit=limit, offset=offset
     )

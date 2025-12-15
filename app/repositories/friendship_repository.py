@@ -17,7 +17,7 @@ class FriendshipRepository(BaseRepo[Friendship]):
         super().__init__(Friendship, db)
 
     async def create_request(
-            self, from_user: uuid.UUID, to_user: uuid.UUID
+        self, from_user: uuid.UUID, to_user: uuid.UUID
     ) -> Optional[Mapping]:
         stmt = (
             insert(self.model)
@@ -37,10 +37,10 @@ class FriendshipRepository(BaseRepo[Friendship]):
             return None
 
     async def update_status(
-            self,
-            from_user: uuid.UUID,
-            to_user: uuid.UUID,
-            friendship_status: FriendshipStatus,
+        self,
+        from_user: uuid.UUID,
+        to_user: uuid.UUID,
+        friendship_status: FriendshipStatus,
     ) -> Mapping:
         stmt = (
             update(self.model)
@@ -68,8 +68,8 @@ class FriendshipRepository(BaseRepo[Friendship]):
         await self.db.commit()
         return result.mappings().first()
 
-    async def get_friendship_between(
-            self, user_id_1: uuid.UUID, user_id_2: uuid.UUID
+    async def get_friendship_info_between(
+        self, user_id_1: uuid.UUID, user_id_2: uuid.UUID
     ) -> Optional[Mapping]:
         stmt = select(self.model).where(
             or_(
@@ -87,8 +87,9 @@ class FriendshipRepository(BaseRepo[Friendship]):
         result = await self.db.execute(stmt)
         return result.mappings().first()
 
-    async def get_pending_requests(self, user_id: uuid.UUID) -> list[
-        dict]:
+    async def get_requests_with_status(
+        self, user_id: uuid.UUID, friendship_status: FriendshipStatus
+    ) -> list[dict]:
         sender_alias = aliased(User)
         receiver_alias = aliased(User)
 
@@ -104,14 +105,16 @@ class FriendshipRepository(BaseRepo[Friendship]):
                 receiver_alias.username.label("receiver_username"),
                 receiver_alias.description.label("receiver_description"),
                 receiver_alias.phone_number.label("receiver_phone_number"),
-                receiver_alias.profile_picture_url.label("receiver_profile_picture_url"),
+                receiver_alias.profile_picture_url.label(
+                    "receiver_profile_picture_url"
+                ),
             )
             .join(sender_alias, Friendship.c.sender_id == sender_alias.id)
             .join(receiver_alias, Friendship.c.receiver_id == receiver_alias.id)
             .where(
                 and_(
                     Friendship.c.receiver_id == user_id,
-                    Friendship.c.status == FriendshipStatus.PENDING
+                    Friendship.c.status == friendship_status,
                 )
             )
         )
@@ -136,25 +139,8 @@ class FriendshipRepository(BaseRepo[Friendship]):
                     "phone_number": row.receiver_phone_number,
                     "profile_picture_url": row.receiver_profile_picture_url,
                 },
-                "status": FriendshipStatus.PENDING
+                "status": FriendshipStatus.PENDING,
             }
             pending_requests.append(friendship_dict)
 
         return pending_requests
-
-    async def get_friends_list(
-            self, user_id: uuid.UUID
-    ) -> List[Mapping]:
-        stmt = select(self.model).where(
-            and_(
-                or_(
-                    self.model.c.sender_id == user_id,
-                    self.model.c.receiver_id == user_id,
-                ),
-                self.model.c.status == FriendshipStatus.ACCEPTED,
-            )
-        )
-
-        result = await self.db.execute(stmt)
-        return list(result.mappings().all())
-

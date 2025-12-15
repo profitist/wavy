@@ -18,7 +18,7 @@ async def get_friends(
     current_user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[FriendshipService, Depends(get_friendship_service)],
 ):
-    friends = service.get_friends(current_user)
+    friends = await service.get_friends(current_user)
     return friends
 
 
@@ -31,31 +31,31 @@ async def get_pending_requests(
     return pending_requests
 
 
-@router.post("/send/{user_id}", response_model=FriendshipSchema)
+@router.post("/send/{username}", response_model=FriendshipSchema)
 async def send_friendship_request(
-    user_id: uuid.UUID,
+    username: str,
     current_user: Annotated[UserModel, Depends(get_current_user)],
     friendship_service: Annotated[FriendshipService, Depends(get_friendship_service)],
     user_service: Annotated[UserService, Depends(get_user_service)],
 ) -> FriendshipSchema:
-    to_user = await user_service.get_by_id(user_id)
+    to_user = await user_service.get_by_name(username)
     if to_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User (to request) is not found",
+            detail=f"User {username} is not found",
         )
     request = await friendship_service.sent_request(current_user, to_user)
     return request
 
 
-@router.post("/reject/{user_id}", response_model=FriendshipSchema)
+@router.post("/reject/{username}", response_model=FriendshipSchema)
 async def reject_friendship_request(
-    user_id: uuid.UUID,
+    username: str,
     current_user: Annotated[UserModel, Depends(get_current_user)],
     friendship_service: Annotated[FriendshipService, Depends(get_friendship_service)],
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):
-    to_user = await user_service.get_by_id(user_id)
+    to_user = await user_service.get_by_name(username)
     if to_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -65,31 +65,33 @@ async def reject_friendship_request(
     return request
 
 
-@router.post("/accept/{user_id}", response_model=FriendshipSchema)
+@router.post("/accept/{username}", response_model=FriendshipSchema)
 async def accept_friendship_request(
-    user_id: uuid.UUID,
+    username: str,
     current_user: Annotated[UserModel, Depends(get_current_user)],
     friendship_service: Annotated[FriendshipService, Depends(get_friendship_service)],
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):
-    to_user = await user_service.get_by_id(user_id)
+    to_user = await user_service.get_by_name(username)
     if to_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User (to accept) is not found",
         )
-    request = friendship_service.accept_request(from_user=current_user, to_user=to_user)
+    request = await friendship_service.accept_request(
+        from_user=current_user, to_user=to_user
+    )
     return request
 
 
-@router.delete("/{user_id}")
+@router.delete("/{username}")
 async def delete_friend(
-    user_id: uuid.UUID,
+    username: str,
     current_user: Annotated[UserModel, Depends(get_current_user)],
     friendship_service: Annotated[FriendshipService, Depends(get_friendship_service)],
     user_service: Annotated[UserService, Depends(get_user_service)],
 ):
-    to_user = await user_service.get_by_id(user_id)
+    to_user = await user_service.get_by_name(user_id)
     if to_user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
