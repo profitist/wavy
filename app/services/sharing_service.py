@@ -35,9 +35,7 @@ class SharingService:
             new_track_data = {
                 "title": track.title,
                 "author": track.author,
-                "album_cover_url": track.album_cover_url,
-                "platform": track.music_platform,
-                "external_link": track.album_cover_url,
+                "platform": track.platform,
             }
             created_track = await self.track_repo.create(new_track_data)
             track_id = created_track.id

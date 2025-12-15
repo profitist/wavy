@@ -1,18 +1,13 @@
 from typing import Annotated
-
 from fastapi.security import OAuth2PasswordBearer
-from datetime import datetime, timedelta, timezone
 import jwt
 from fastapi import Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 
 from app.models.user import User as UserModel
 from app.config import JWT_SECRET_KEY, ALGORITHM
 from app.core.dependencies import get_user_service
 from app.services.user_service import UserService as UserService
 from app.schemas.user_schema import UserSchema
-
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/token")
 
@@ -21,9 +16,6 @@ async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     service: Annotated[UserService, Depends(get_user_service)],
 ) -> UserModel:
-    """
-    Проверяет JWT и возвращает пользователя из базы.
-    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

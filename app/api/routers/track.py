@@ -5,14 +5,12 @@ import uuid
 from fastapi import (
     Depends,
     APIRouter,
-    Path,
     status,
     Query,
-    HTTPException,
     UploadFile,
     File,
 )
-from typing import Annotated, List
+from typing import List
 
 from app.models.user import User
 from app.schemas.track_schema import TrackSchema, TrackCreateSchema, TrackUpdateSchema
@@ -33,24 +31,21 @@ async def get_tracks(
     limit: int = Query(default=50),
     service: TrackService = Depends(get_track_service),
 ):
-    result = await service.get_tracks(offset, limit)
-    return result
+    return await service.get_tracks(offset, limit)
 
 
 @router.get("/{track_id}", response_model=TrackSchema, status_code=status.HTTP_200_OK)
 async def get_track(
     track_id: uuid.UUID, service: TrackService = Depends(get_track_service)
 ):
-    result = service.get_by_id(track_id)
-    return result
+    return service.get_by_id(track_id)
 
 
 @router.get("/{name}", response_model=List[TrackSchema], status_code=status.HTTP_200_OK)
 async def get_track_by_name(
     name: str, service: TrackService = Depends(get_track_service)
 ):
-    db_tracks = await service.get_tracks_by_name(name)
-    return db_tracks
+    return await service.get_tracks_by_name(name)
 
 
 @router.post("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
@@ -59,8 +54,7 @@ async def create_track(
     service: TrackService = Depends(get_track_service),
     _: User = Depends(get_current_admin),
 ):
-    created_track = await service.create_track(track)
-    return created_track
+    return await service.create_track(track)
 
 
 @router.put("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
@@ -69,8 +63,7 @@ async def edit_track(
     service: TrackService = Depends(get_track_service),
     _: User = Depends(get_current_admin),
 ):
-    new_track_info = await service.edit_track_info(track.id, track)
-    return new_track_info
+    return await service.edit_track_info(track.id, track)
 
 
 @router.delete("/{track_id}", response_model=dict, status_code=status.HTTP_200_OK)
@@ -79,8 +72,7 @@ async def delete_track(
     service: TrackService = Depends(get_track_service),
     _: User = Depends(get_current_admin),
 ):
-    deleted_info = service.delete_track(track_id)
-    return deleted_info
+    return await service.delete_track(track_id)
 
 
 @router.post("/upload-cover", status_code=status.HTTP_201_CREATED)

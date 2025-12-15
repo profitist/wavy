@@ -8,10 +8,10 @@ from app.models.user import User
 from app.auth.user_validation import get_current_user
 
 
-router = APIRouter()
+router = APIRouter(prefix="/feed", tags=["Feed"])
 
 
-@router.get("/feed/{user_id}", response_model=list[SharedTrackResponseSchema])
+@router.get("/", response_model=list[SharedTrackResponseSchema])
 async def get_my_feed(
     service: Annotated[SharingService, Depends(get_sharing_service)],
     current_user: Annotated[User, Depends(get_current_user)],

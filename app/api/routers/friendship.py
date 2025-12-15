@@ -18,7 +18,7 @@ async def get_friends(
     current_user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[FriendshipService, Depends(get_friendship_service)],
 ):
-    friends = service.get_friends(current_user)
+    friends = await service.get_friends(current_user)
     return friends
 
 
@@ -27,7 +27,7 @@ async def get_pending_requests(
     current_user: Annotated[UserModel, Depends(get_current_user)],
     service: Annotated[FriendshipService, Depends(get_friendship_service)],
 ):
-    pending_requests = service.get_pending_requests(current_user)
+    pending_requests = await service.get_pending_requests(current_user)
     return pending_requests
 
 
@@ -78,7 +78,9 @@ async def accept_friendship_request(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User (to accept) is not found",
         )
-    request = friendship_service.accept_request(from_user=current_user, to_user=to_user)
+    request = await friendship_service.accept_request(
+        from_user=current_user, to_user=to_user
+    )
     return request
 
 
