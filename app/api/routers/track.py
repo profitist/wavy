@@ -75,8 +75,9 @@ async def upload_cover(
     _: User = Depends(get_current_admin),
 ) -> dict:
     file_bytes = await file.read()
+    name = os.path.splitext(file.filename)[0]
     ext = os.path.splitext(file.filename)[1]
-    filename = f"{uuid.uuid4()}{ext}"
+    filename = f"{name}{ext}"
     await service.save_song_cover(file_bytes, filename)
     return {"filename": filename, "status": "saved"}
 
@@ -86,7 +87,7 @@ async def download_cover(
     track_uuid: str,
     service: TrackService = Depends(get_track_service),
 ) -> StreamingResponse:
-    file = await service.s3_client.download_bytes(filename=track_uuid)
+    file = await service.get_cover(id=track_uuid)
     mime, _ = mimetypes.guess_type(track_uuid)
     mime = mime or "application/octet-stream"
     return StreamingResponse(
