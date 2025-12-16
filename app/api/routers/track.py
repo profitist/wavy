@@ -5,10 +5,8 @@ import uuid
 from fastapi import (
     Depends,
     APIRouter,
-    Path,
     status,
     Query,
-    HTTPException,
     UploadFile,
     File,
 )

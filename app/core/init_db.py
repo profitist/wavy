@@ -1,8 +1,6 @@
 import asyncio
 import asyncpg
 from app.core.database import engine, Base, DATABASE_URL
-
-# 🔹 Импортируем все модели после Base, чтобы SQLAlchemy видел все таблицы
 from app.models.user import User
 from app.models.shared_track import SharedTrack
 from app.models.reactions import Reaction
@@ -10,7 +8,6 @@ from app.models.track import Track
 from app.models.friendship import Friendship
 from app.models.friendship_status import FriendshipStatus
 from app.models.music_platform import MusicPlatform
-# импортируй остальные модели, если есть
 
 
 async def test_connect():

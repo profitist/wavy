@@ -2,16 +2,7 @@ from contextlib import asynccontextmanager
 from aiobotocore.session import get_session
 from fastapi import HTTPException
 from starlette import status
-import os
 from app.config import S3_ID, S3_SECRET
-
-
-import os
-from contextlib import asynccontextmanager
-
-from aiobotocore.session import get_session
-from fastapi import HTTPException
-from starlette import status
 
 
 class S3Client:
