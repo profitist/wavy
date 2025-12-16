@@ -4,7 +4,7 @@ from typing import List
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-
+from app.models.reactions import Reaction
 from app.models.shared_track import SharedTrack
 from app.repositories.base_repository import BaseRepo
 
@@ -26,9 +26,9 @@ class SharedTrackRepository(BaseRepo[SharedTrack]):
             .limit(limit)
             .offset(offset)
             .options(
-                selectinload(self.model.track),
-                selectinload(self.model.sender),
-                selectinload(self.model.reactions).selectinload("user"),
+                selectinload(SharedTrack.track),
+                selectinload(SharedTrack.sender),
+                selectinload(SharedTrack.reactions).selectinload(Reaction.user),
             )
         )
 

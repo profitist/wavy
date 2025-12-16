@@ -19,7 +19,7 @@ mock_track_response = {
 @pytest.mark.asyncio
 async def test_get_tracks_list(ac):
     mock_serv = AsyncMock()
-    mock_serv.get_tracks.return_value = [mock_track_response]
+    mock_serv.search_tracks.return_value = [mock_track_response]
     app.dependency_overrides[get_track_service] = lambda: mock_serv
 
     response = await ac.get("/tracks/")

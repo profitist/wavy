@@ -5,7 +5,7 @@ from app.services.sharing_service import SharingService
 from app.schemas.shared_track_schema import ShareRequestSchema
 from app.schemas.track_schema import TrackCreateSchema
 
-track_data = TrackCreateSchema(title="lalala", author="men", platform="yandex")
+track_data = TrackCreateSchema(title="lalala", author="author", platform="yandex")
 share_request = ShareRequestSchema(track=track_data, description="Test")
 user_id = uuid.uuid4()
 

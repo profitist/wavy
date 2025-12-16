@@ -10,8 +10,15 @@ from app.core.dependencies import get_user_service
 
 
 def make_mock_friendship(status_str="pending"):
-    user_mock = UserSchema(username="yana", description="", phone_number="88005553535")
-    return FriendshipSchema(sender=user_mock, receiver=user_mock, status=status_str)
+    user_mock = UserSchema(
+        id=uuid.uuid4(), username="yana", description="", phone_number="88005553535"
+    )
+    return FriendshipSchema(
+        friendship_id=uuid.uuid4(),
+        sender=user_mock,
+        receiver=user_mock,
+        status=status_str,
+    )
 
 
 @pytest.mark.asyncio

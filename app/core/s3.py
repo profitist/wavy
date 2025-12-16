@@ -6,11 +6,6 @@ from app.config import S3_ID, S3_SECRET
 
 
 class S3Client:
-    """
-    Асинхронный клиент для работы с Yandex Object Storage (или любым S3).
-    Работает полностью в памяти — без временных файлов.
-    """
-
     def __init__(
         self,
         access_key: str,
@@ -32,11 +27,6 @@ class S3Client:
             yield client
 
     async def upload_bytes(self, data: bytes, filename: str):
-        """
-        Загружает файл в S3 напрямую из памяти.
-        filename — имя файла (например: cover.jpg)
-        data — байты файла
-        """
         try:
             async with self.get_client() as client:
                 await client.put_object(
@@ -51,9 +41,6 @@ class S3Client:
             )
 
     async def download_bytes(self, filename: str) -> bytes:
-        """
-        Скачивает объект в виде байтов.
-        """
         try:
             filename += ".png"
             async with self.get_client() as client:

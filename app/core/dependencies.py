@@ -37,8 +37,9 @@ async def get_friendship_repository(
 ):
     return FriendshipRepository(db=db)
 
+
 async def get_shared_track_repository(
-        db: Annotated[AsyncSession, Depends(get_async_session)]
+    db: Annotated[AsyncSession, Depends(get_async_session)],
 ):
     return SharedTrackRepository(db)
 

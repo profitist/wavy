@@ -12,6 +12,7 @@ async def test_register_user(ac):
     mock_serv = AsyncMock()
     mock_serv.get_by_name.return_value = None
     mock_serv.create_user.return_value = {
+        "id": uuid.uuid4(),
         "username": "svetlana_lox",
         "description": "pupupupu",
         "phone_number": "11111111",
@@ -23,7 +24,7 @@ async def test_register_user(ac):
         "description": "pupupupu",
         "phone_number": "11111111",
     }
-    response = await ac.post("/user/", json=payload)
+    response = await ac.post("/users/", json=payload)
     assert response.status_code == 201
     assert response.json()["username"] == "svetlana_lox"
 
@@ -42,7 +43,7 @@ async def test_register_existing_user_fails(ac):
         "description": "hahahahaha",
         "phone_number": "11111111",
     }
-    response = await ac.post("/user/", json=payload)
+    response = await ac.post("/users/", json=payload)
 
     assert response.status_code == 404
 
@@ -63,6 +64,6 @@ async def test_login_success(ac):
     app.dependency_overrides[get_user_service] = lambda: mock_serv
     form_data = {"username": "stepastepa", "password": real}
 
-    response = await ac.post("/tokens/tokens", data=form_data)
+    response = await ac.post("/users/token", data=form_data)
     assert response.status_code == 200
     assert "access_token" in response.json()

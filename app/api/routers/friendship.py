@@ -1,8 +1,6 @@
-import uuid
 from typing import Annotated, List
 from fastapi import Depends, HTTPException, status, APIRouter
 
-from app.models.friendship import Friendship
 from app.models.user import User as UserModel
 from app.auth.user_validation import get_current_user
 from app.services.friendship_service import FriendshipService
