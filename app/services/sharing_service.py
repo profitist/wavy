@@ -1,5 +1,8 @@
 import uuid
-from typing import TYPE_CHECKING, Optional
+from sqlalchemy import select
+from typing import Optional
+
+from sqlalchemy.orm import selectinload
 
 from app.repositories.friendship_repository import FriendshipRepository
 from app.schemas.shared_track_schema import ShareRequestSchema
@@ -46,7 +49,15 @@ class SharingService:
             "description": data.description,
         }
         new_share = await self.share_repo.create(share_data)
-        return await self.share_repo.get_shared_track_by_id(new_share.id)
+
+        result = await self.share_repo.db.execute(
+            select(SharedTrack)
+            .options(selectinload(SharedTrack.track))
+            .where(SharedTrack.id == new_share.id)
+        )
+
+        full_share = result.scalar_one()
+        return full_share
 
     async def get_user_shares(
         self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
