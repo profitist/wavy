@@ -1,6 +1,7 @@
+import datetime
 import uuid
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.track_schema import TrackCreateSchema, TrackSchema
 
@@ -15,6 +16,6 @@ class SharedTrackResponseSchema(BaseModel):
     id: uuid.UUID
     sender_id: uuid.UUID
     description: Optional[str]
-    created_at: str
+    created_at: datetime = Field(default_factory=datetime.now)
     track: TrackSchema
     model_config = ConfigDict(from_attributes=True)
