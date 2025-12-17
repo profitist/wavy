@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -44,20 +44,14 @@ async def edit_user(
 
 
 @router.get(
-    "/{username}", status_code=status.HTTP_200_OK, response_model=UserUpdateSchema
+    "/{username}", status_code=status.HTTP_200_OK, response_model=Optional[UserUpdateSchema]
 )
 async def get_user(
     username: str = Path(max_length=20, min_length=1),
     _: UserModel = Depends(get_current_user),
     user_service: UserService = Depends(get_user_service),
 ):
-    user = await user_service.get_by_name(username)
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
-    return user
+    return await user_service.get_by_name(username)
 
 
 @router.post("/", status_code=201, response_model=UserSchema)
