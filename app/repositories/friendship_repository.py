@@ -112,9 +112,15 @@ class FriendshipRepository(BaseRepo[Friendship]):
             .join(sender_alias, Friendship.c.sender_id == sender_alias.id)
             .join(receiver_alias, Friendship.c.receiver_id == receiver_alias.id)
             .where(
-                and_(
-                    Friendship.c.receiver_id == user_id,
-                    Friendship.c.status == friendship_status,
+                or_(
+                    and_(
+                        Friendship.c.receiver_id == user_id,
+                        Friendship.c.status == friendship_status,
+                    ),
+                    and_(
+                        Friendship.c.sender_id == user_id,
+                        Friendship.c.status == friendship_status,
+                    )
                 )
             )
         )
