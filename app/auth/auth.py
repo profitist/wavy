@@ -8,7 +8,7 @@ from app.config import JWT_SECRET_KEY, ALGORITHM
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_DAYS = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 
@@ -26,7 +26,7 @@ def create_access_token(data: dict):
         to_encode["id"] = str(to_encode["id"])
     if "uuid" in to_encode:
         to_encode["uuid"] = str(to_encode["uuid"])
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=ALGORITHM)
 
