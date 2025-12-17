@@ -5,10 +5,9 @@ from app.repositories.friendship_repository import FriendshipRepository
 from app.schemas.shared_track_schema import ShareRequestSchema
 from app.models.shared_track import SharedTrack
 
-if TYPE_CHECKING:
-    from app.repositories.track_repository import TrackRepository
-    from app.repositories.shared_track_repository import SharedTrackRepository
-    from app.models.friendship_status import FriendshipStatus
+from app.repositories.track_repository import TrackRepository
+from app.repositories.shared_track_repository import SharedTrackRepository
+from app.models.friendship_status import FriendshipStatus
 
 
 class SharingService:

@@ -21,5 +21,5 @@ async def get_my_feed(
     return await service.get_feed_for_user(
         user_id=current_user.id,
         limit=limit,
-        offset=offset,  # Берем ID из токена
+        offset=offset,
     )
