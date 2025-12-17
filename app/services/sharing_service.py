@@ -25,12 +25,12 @@ class SharingService:
         self, user_id: uuid.UUID, data: ShareRequestSchema
     ) -> SharedTrack:
         track = data.track
-        existing_track = await self.track_repo.get_tracks_by_details(
-            title=track.title, author=track.author
+        existing_tracks = await self.track_repo.get_tracks_by_details(
+            title=track.title, author=track.author, offset=0, limit=10
         )
 
-        if existing_track:
-            track_id = existing_track.id
+        if existing_tracks:
+            track_id = existing_tracks[0].id
         else:
             new_track_data = {
                 "title": track.title,
@@ -72,10 +72,13 @@ class SharingService:
         )
         ids = []
         for relation in friends_relations:
-            if relation.sender_id == user_id:
-                ids.append(relation.receiver_id)
-            else:
-                ids.append(relation.sender_id)
+            try:
+                if relation['sender']['id'] == user_id:
+                    ids.append(relation['receiver']['id'])
+                else:
+                    ids.append(relation['sender']['id'])
+            except (KeyError, ValueError, TypeError):
+                continue
         ids.append(user_id)
         return await self.share_repo.get_last_tracks_feed(
             user_ids=ids, limit=limit, offset=offset
