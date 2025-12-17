@@ -48,3 +48,12 @@ class SharedTrackRepository(BaseRepo[SharedTrack]):
         )
         result = await self.db.execute(query)
         return list(result.scalars().all())
+
+    async def get_shared_track_by_id(self, shared_id: uuid.UUID):
+        result = await self.db.execute(
+            select(SharedTrack)
+            .options(selectinload(SharedTrack.track))
+            .where(SharedTrack.id == shared_id)
+        )
+        full_share = result.scalar_one()
+        return result.scalar_one_or_none()

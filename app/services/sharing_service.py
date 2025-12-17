@@ -46,7 +46,7 @@ class SharingService:
             "description": data.description,
         }
         new_share = await self.share_repo.create(share_data)
-        return await self.share_repo.get_by_id(new_share.id)
+        return await self.share_repo.get_shared_track_by_id(new_share.id)
 
     async def get_user_shares(
         self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
