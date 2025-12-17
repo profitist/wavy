@@ -78,11 +78,11 @@ class SharingService:
     async def get_feed_for_user(
         self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
     ) -> list[SharedTrack]:
-        friends_relations = await self.friend_repo.get_requests_with_status(
+        friends = await self.friend_repo.get_requests_with_status(
             user_id, FriendshipStatus.ACCEPTED
         )
         ids = []
-        for relation in friends_relations:
+        for relation in friends:
             try:
                 if relation['sender']['id'] == user_id:
                     ids.append(relation['receiver']['id'])
@@ -90,7 +90,6 @@ class SharingService:
                     ids.append(relation['sender']['id'])
             except (KeyError, ValueError, TypeError):
                 continue
-        ids.append(user_id)
         return await self.share_repo.get_last_tracks_feed(
             user_ids=ids, limit=limit, offset=offset
         )
