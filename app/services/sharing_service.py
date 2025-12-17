@@ -8,6 +8,7 @@ from app.models.shared_track import SharedTrack
 if TYPE_CHECKING:
     from app.repositories.track_repository import TrackRepository
     from app.repositories.shared_track_repository import SharedTrackRepository
+    from app.models.friendship_status import FriendshipStatus
 
 
 class SharingService:
@@ -25,7 +26,7 @@ class SharingService:
         self, user_id: uuid.UUID, data: ShareRequestSchema
     ) -> SharedTrack:
         track = data.track
-        existing_track = await self.track_repo.get_track_by_details(
+        existing_track = await self.track_repo.get_tracks_by_details(
             title=track.title, author=track.author
         )
 
@@ -67,7 +68,9 @@ class SharingService:
     async def get_feed_for_user(
         self, user_id: uuid.UUID, limit: int = 20, offset: int = 0
     ) -> list[SharedTrack]:
-        friends_relations = await self.friend_repo.get_friends_list(user_id)
+        friends_relations = await self.friend_repo.get_requests_with_status(
+            user_id, FriendshipStatus.ACCEPTED
+        )
         ids = []
         for relation in friends_relations:
             if relation.sender_id == user_id:

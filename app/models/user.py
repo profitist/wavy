@@ -16,10 +16,10 @@ class User(Base):
     )
     username: Mapped[str] = mapped_column(String(40), unique=True, index=True)
     description: Mapped[str] = mapped_column(String(250), nullable=True)
-    hashed_password: Mapped[str] = mapped_column(String(50), nullable=True)
+    hashed_password: Mapped[str] = mapped_column(String(200), nullable=True)
     role: Mapped[str] = mapped_column(String(15), default="user", nullable=True)
     phone_number: Mapped[Optional[str]] = mapped_column(String(12), nullable=True)
-    user_picture_number: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    user_picture_number: Mapped[int] = mapped_column(Integer, default=1)
     profile_picture_url: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
     )
