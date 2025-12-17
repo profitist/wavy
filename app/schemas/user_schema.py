@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 
 class UserCreateSchema(BaseModel):
@@ -24,6 +24,12 @@ class UserSchema(BaseModel):
     user_picture_number: int = Field(default=1, ge=1, le=7)
 
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
+
+    @field_validator('user_picture_number', mode='before')
+    def validate_picture_number(cls, v: int | None):
+        if v is None:
+            return 1
+        return v
 
 
 class UserUpdateSchema(BaseModel):
