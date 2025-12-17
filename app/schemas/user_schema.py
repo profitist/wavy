@@ -4,6 +4,12 @@ from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 
+class UserInFeedSchema(BaseModel):
+    id: uuid.UUID
+    username: str = Field(min_length=3, max_length=40)
+    user_picture_number: int = Field(default=1, ge=1, le=12)
+    model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
+
 class UserCreateSchema(BaseModel):
     username: str = Field(min_length=3, max_length=40)
     hashed_password: str = Field(min_length=8, max_length=40, default="")
