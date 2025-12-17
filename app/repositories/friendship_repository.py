@@ -120,7 +120,7 @@ class FriendshipRepository(BaseRepo[Friendship]):
                     and_(
                         Friendship.c.sender_id == user_id,
                         Friendship.c.status == friendship_status,
-                    )
+                    ),
                 )
             )
         )
