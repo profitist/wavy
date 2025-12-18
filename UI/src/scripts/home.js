@@ -1,10 +1,4 @@
-// -------------------------
-// Импорт токенов
-// -------------------------
 
-// -------------------------
-// 1. Загрузка всех треков
-// -------------------------
 async function loadTracks() {
     try {
         const response = await fetch("http://212.193.27.136/tracks/", {
@@ -18,9 +12,6 @@ async function loadTracks() {
     }
 }
 
-// -------------------------
-// 2. Поиск треков
-// -------------------------
 async function searchTrackByName(name) {
     try {
         const response = await fetch(
@@ -36,9 +27,6 @@ async function searchTrackByName(name) {
     }
 }
 
-// -------------------------
-// 3. Отправка трека
-// -------------------------
 async function sendTrack(track, description) {
     const token = localStorage.getItem('access_token')
     try {
@@ -59,9 +47,6 @@ async function sendTrack(track, description) {
     }
 }
 
-// -------------------------
-// 4. Инициализация страницы
-// -------------------------
 document.addEventListener("DOMContentLoaded", async () => {
     const searchInput = document.querySelector(".share-search-input");
     const list = document.querySelector(".share-track-list");

@@ -1,14 +1,4 @@
-// ===============================
-//  ЭКСПОРТ КОНТЕЙНЕРА ДЛЯ ТОКЕНОВ
-// ===============================
-//export let token_dict = {
-//    access_token: "",
-//    refresh_token: "",
-//};
 
-// ===============================
-//  ФУНКЦИЯ ЛОГИНА
-// ===============================
 export async function login(userData) {
     try {
         const response = await fetch("http://212.193.27.136/users/token", {
@@ -22,6 +12,7 @@ export async function login(userData) {
         const data = await response.json();
 
         if (response.ok) {
+
             localStorage.setItem('access_token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);
             return data;
@@ -36,16 +27,34 @@ export async function login(userData) {
     }
 }
 
-// ===============================
-//  КОД ДЛЯ СТРАНИЦЫ ВХОДА
-//  Выполняется только если на странице есть нужные элементы
-// ===============================
+export async function GetCurrentUserData(){
+    const token = localStorage.getItem('access_token')
+        try {
+            const response = await fetch("http://212.193.27.136/profile/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                }
+            });
+
+            if (!response.ok) throw new Error(await response.text());
+            let user = await response.json();
+            localStorage.setItem('avatarNumber',user.user_picture_number);
+            localStorage.setItem('currentUsername',user.username);
+            localStorage.setItem('description', user.description);
+            localStorage.setItem('userId', user.id);
+            
+        } catch (err) {
+            console.error("Ошибка получения данных о пользователе:", err);
+            alert("Упс, вас не существует");
+        }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector(".reg-form.center-column.card");
     const btn = document.getElementById("btn-login");
 
-    // Если кнопки нет — значит это НЕ страница логина → просто выходим.
     if (!form || !btn) return;
 
     btn.addEventListener("click", async () => {
@@ -54,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             await login(data);
+            await GetCurrentUserData();
             goTo("screen-home.html");   // переход
         } catch (err) {
             alert("Ошибка входа, проверьте консоль.");

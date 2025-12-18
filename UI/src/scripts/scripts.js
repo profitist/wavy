@@ -1,19 +1,8 @@
-// ===========================
-// 1. Навигация между страницами
-// ===========================
 
-// Функция перехода на другую страницу
 function goTo(page) {
   window.location.href = page;
 }
 
-// Можно использовать так:
-// <button onclick="goTo('screen-login.html')">Войти</button>
-
-
-// ===========================
-// 2. Тумблеры в настройках
-// ===========================
 document.addEventListener('DOMContentLoaded', () => {
   const toggles = document.querySelectorAll('.settings-toggle');
 
@@ -24,11 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-
-
-// ===========================
-// 3. Попап "Поделиться треком"
-// ===========================
 
 function setShareStep(step) {
   const steps = document.querySelectorAll('.share-step');
@@ -76,11 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-
-// ===========================
-// 4. Попап "Добавить друга"
-// ===========================
-
 function openAddFriendPopup() {
   const overlay = document.getElementById('add-friend-popup');
   if (!overlay) return;
@@ -106,3 +85,57 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.target === overlay) closeAddFriendPopup();
   });
 });
+
+function openFriendRequestsPopup() {
+  const overlay = document.getElementById('new-friends-popup');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+}
+
+function closeFriendRequestsPopup() {
+  const overlay = document.getElementById('new-friends-popup');
+  if (!overlay) return;
+
+  overlay.classList.remove('active');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('new-friends-popup');
+  if (!overlay) return; // Нет попапа — выходим
+
+  const closeBtn = document.getElementById('new-friends-popup-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeFriendRequestsPopup);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeFriendRequestsPopup();
+  });
+});
+
+function openChangeAvatarPopup() {
+  const overlay = document.getElementById('avatar-popup');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+}
+
+function closeChangeAvatarPopup() {
+  const overlay = document.getElementById('avatar-popup');
+  if (!overlay) return;
+
+  overlay.classList.remove('active');
+  document.location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('avatar-popup');
+  if (!overlay) return; // Нет попапа — выходим
+
+  const closeBtn = document.getElementById('new-friends-popup-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeChangeAvatarPopup);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeChangeAvatarPopup();
+  });
+});
+

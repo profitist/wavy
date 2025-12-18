@@ -11,22 +11,27 @@
 </button>
 <!-- Пока пустой заголовок в центре, если понадобится -->
 <div class="profile-title">Профиль</div>
-<!-- Кнопка редактирования профиля (карандаш) -->
-<button class="profile-edit" type="button">
-<svg fill="none" height="27" viewbox="0 0 27 27" width="27" xmlns="http://www.w3.org/2000/svg">
-<path d="M5.625 21.375H7.22812L18.225 10.3781L16.6219 8.775L5.625 19.7719V21.375ZM3.375 23.625V18.8438L18.225 4.02187C18.45 3.81562 18.6984 3.65625 18.9703 3.54375C19.2422 3.43125 19.5281 3.375 19.8281 3.375C20.1281 3.375 20.4188 3.43125 20.7 3.54375C20.9813 3.65625 21.225 3.825 21.4313 4.05L22.9781 5.625C23.2031 5.83125 23.3672 6.075 23.4703 6.35625C23.5734 6.6375 23.625 6.91875 23.625 7.2C23.625 7.5 23.5734 7.78594 23.4703 8.05781C23.3672 8.32969 23.2031 8.57813 22.9781 8.80313L8.15625 23.625H3.375ZM17.4094 9.59063L16.6219 8.775L18.225 10.3781L17.4094 9.59063Z" fill="#00FFFF"></path>
-</svg>
-</button>
+        <!-- Кнопка редактирования профиля (карандаш) -->
+        <button type="button" id="edit-avatar-btn" aria-label="Изменить аватар" onclick = openChangeAvatarPopup()>
+          <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.625 21.375H7.22812L18.225 10.3781L16.6219 8.775L5.625 19.7719V21.375ZM3.375 23.625V18.8438L18.225 4.02187C18.45 3.81562 18.6984 3.65625 18.9703 3.54375C19.2422 3.43125 19.5281 3.375 19.8281 3.375C20.1281 3.375 20.4188 3.43125 20.7 3.54375C20.9813 3.65625 21.225 3.825 21.4313 4.05L22.9781 5.625C23.2031 5.83125 23.3672 6.075 23.4703 6.35625C23.5734 6.6375 23.625 6.91875 23.625 7.2C23.625 7.5 23.5734 7.78594 23.4703 8.05781C23.3672 8.32969 23.2031 8.57813 22.9781 8.80313L8.15625 23.625H3.375ZM17.4094 9.59063L16.6219 8.775L18.225 10.3781L17.4094 9.59063Z" fill="#00FFFF"/>
+          </svg>
+        </button>
 </header>
 <!-- Блок аватар + надпись "Профиль" -->
-<div class="profile-avatar-block">
-<div class="profile-avatar-wrapper">
-<!-- Фото -->
-<img alt="Аватар пользователя" class="profile-avatar" src="src/assets/images/photo.png"/>
-</div>
-</div>
+      <div class="profile-avatar-block">
+        <div class="profile-avatar-wrapper">
+          <!-- Фото -->
+          <img
+            id="profile-avatar"
+            src=""
+            alt="Аватар пользователя"
+            class="profile-avatar"
+          />
+        </div>
+      </div>
 <!-- Имя пользователя -->
-<h1 class="profile-name">Вася Пупок</h1>
+<h1 class="profile-name">Имя пользователя</h1>
 <!-- Меню профиля -->
 <nav class="profile-menu">
 <!-- Пункт: Друзья -->
@@ -62,8 +67,76 @@
 </span>
 </button>
 </nav>
+
+
+    <!-- =====================
+     Попап "Выбери аватар"
+     ===================== -->
+    <div class="add-friend-overlay" id="avatar-popup">
+      <div class="add-friend-window avatar-window">
+
+        <div class="popup-header">
+          <span class="popup-header-spacer" aria-hidden="true"></span>
+
+          <h2 class="share-step-title popup-title">Выбери аватар</h2>
+
+          <button class="add-friend-close" type="button" id="avatar-popup-close" aria-label="Закрыть" onclick = closeChangeAvatarPopup()>
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 23.75L6.25 22L13.25 15L6.25 8L8 6.25L15 13.25L22 6.25L23.75 8L16.75 15L23.75 22L22 23.75L15 16.75L8 23.75Z" fill="white"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="avatar-body">
+          <div class="avatar-grid" id="avatar-grid">
+            <!-- 12 аватарок (замени src на свои файлы) -->
+            <button class="avatar-item" type="button" data-avatar="1" aria-label="Аватар 1">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_1.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="2" aria-label="Аватар 2">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_2.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="3" aria-label="Аватар 3">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_3.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="4" aria-label="Аватар 4">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_4.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="5" aria-label="Аватар 5">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_5.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="6" aria-label="Аватар 6">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_6.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="7" aria-label="Аватар 7">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_7.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="8" aria-label="Аватар 8">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_8.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="9" aria-label="Аватар 9">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_9.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="10" aria-label="Аватар 10">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_10.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="11" aria-label="Аватар 11">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_11.png" alt="">
+            </button>
+            <button class="avatar-item" type="button" data-avatar="12" aria-label="Аватар 12">
+              <img src="src/assets/avatars/mini_avatars/png/avatar_12.png" alt="">
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
 <script src="src/scripts/scripts.js"></script>
 <script type="module">
+document.addEventListener("DOMContentLoaded", async () => {
+
+const page = document.querySelector(".page-profile");
+
 async function get_name(token) {
     try {
         const response = await fetch("http://212.193.27.136/profile/", {
@@ -83,11 +156,54 @@ async function get_name(token) {
         throw err;
     }
 }
-const token = localStorage.getItem('access_token')
+
+document.getElementById('profile-avatar').src = `src/assets/avatars/big_avatars/png/avatar_${localStorage.getItem("avatarNumber")}.png`;
+
+const token = localStorage.getItem('access_token');
 get_name(token)
     .then(username => {
         document.querySelector(".profile-name").innerHTML = username;
     })
     .catch(err => console.error(err));
+
+const avatarGrid = document.getElementById('avatar-grid');
+
+avatarGrid.addEventListener('click', async (event) => {
+  const button = event.target.closest('.avatar-item');
+  if (!button) return;
+
+  const avatarNumber = button.dataset.avatar;
+  localStorage.setItem('avatarNumber', avatarNumber);
+
+  await ChangeProfileAvatar(avatarNumber);
+  
+  document.getElementById('profile-avatar').src = `src/assets/avatars/big_avatars/png/avatar_${avatarNumber}.png`;
+});
+
+
+async function ChangeProfileAvatar() {
+    const token = localStorage.getItem('access_token');
+    try {
+        const response = await fetch("http://212.193.27.136/profile/", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body : JSON.stringify({
+                id : localStorage.getItem('userId'),
+                username : localStorage.getItem('currentUsername'),
+                description : localStorage.getItem('description'),
+                user_picture_number : Number(localStorage.getItem('avatarNumber'))
+            })
+            });
+            if (!response.ok) throw new Error(await response.text());
+        }
+    catch(err) {
+        console.error("Ошибка установки аватара:", err);
+        alert("Упс, кажется придётся терпеть старую аватарку");
+    }
+}
+})
 </script>
 </body></html>

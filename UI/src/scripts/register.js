@@ -2,11 +2,11 @@ async function createUser(userData) {
     console.log(JSON.stringify(userData))
     try {
         const response = await fetch("http://212.193.27.136/users/", {
-          method: "POST", // Метод запроса
+          method: "POST",
           headers: {
-            "Content-Type" : "application/json", // Указываем, что отправляем JSON
+            "Content-Type" : "application/json",
           },
-          body: JSON.stringify(userData), // Преобразуем объект в строку JSON
+          body: JSON.stringify(userData),
         });
 
         if (!response.ok) {
@@ -16,7 +16,6 @@ async function createUser(userData) {
         console.log("Новый пользователь:", newUser);
     } catch (err) {
         console.error("Ошибка при создании пользователя:", err);
-        // пробрасываем ошибку наверх, чтобы вызывающий код мог обработать её
         throw err;
     }
 }
@@ -35,7 +34,6 @@ document.getElementById("btn-register").addEventListener("click", async () => {
 //            return;
 //    }
 
-    // переход после успешной регистрации
     try {
         await createUser(data);
         goTo("screen-home.html");
