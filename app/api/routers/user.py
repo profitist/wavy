@@ -44,7 +44,9 @@ async def edit_user(
 
 
 @router.get(
-    "/{username}", status_code=status.HTTP_200_OK, response_model=Optional[UserUpdateSchema]
+    "/{username}",
+    status_code=status.HTTP_200_OK,
+    response_model=Optional[UserUpdateSchema],
 )
 async def get_user(
     username: str = Path(max_length=20, min_length=1),

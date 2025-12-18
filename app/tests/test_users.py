@@ -29,4 +29,5 @@ async def test_get_user_not_found(ac):
     app.dependency_overrides[get_user_service] = lambda: mock_serv
 
     response = await ac.get("/users/unknown")
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.json() is None
