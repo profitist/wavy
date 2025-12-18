@@ -1,5 +1,5 @@
 from fastapi import Depends, APIRouter, Path, status, HTTPException
-from typing import Annotated, Any
+from typing import Annotated
 
 from app.schemas.user_schema import UserSchema, UserUpdateSchema, UserCreateSchema
 from app.core.dependencies import get_user_service

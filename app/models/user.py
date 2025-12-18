@@ -1,7 +1,7 @@
 import uuid
 from typing import List, Optional
 from datetime import datetime
-from sqlalchemy import String, func, DateTime
+from sqlalchemy import String, func, DateTime, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
@@ -19,6 +19,7 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(50), nullable=True)
     role: Mapped[str] = mapped_column(String(15), default="user", nullable=True)
     phone_number: Mapped[Optional[str]] = mapped_column(String(12), nullable=True)
+    user_picture_number: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     profile_picture_url: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
     )

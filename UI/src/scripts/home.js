@@ -1,4 +1,3 @@
-
 async function loadTracks() {
     try {
         const response = await fetch("http://212.193.27.136/tracks/", {
@@ -47,7 +46,87 @@ async function sendTrack(track, description) {
     }
 }
 
+async function loadFeed() {
+    const token = localStorage.getItem("access_token");
+
+    try {
+        const response = await fetch("http://212.193.27.136/feed/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки уведомлений");
+        }
+
+        return await response.json();
+    } catch (err) {
+        console.error("Ошибка при загрузке feed:", err);
+        return [];
+    }
+}
+
+function createNotificationItem(item) {
+    const li = document.createElement("li");
+    li.className = "home-notification-item";
+
+    li.innerHTML = `
+        <div class="home-notification-left">
+            <div class="home-notification-cover">
+                <svg fill="none" height="52" viewBox="0 0 52 52" width="52" xmlns="http://www.w3.org/2000/svg">
+                    <rect fill="#7F7F7F" height="52" rx="11" width="52"></rect>
+                </svg>
+                <div class="home-notification-play">▶</div>
+            </div>
+        </div>
+
+        <div class="home-notification-main">
+            <div class="home-notification-title">
+                ${item.track.title}
+            </div>
+            <div class="home-notification-artist">
+                ${item.track.author}
+            </div>
+        </div>
+
+        <div class="home-notification-right">
+            <img
+                class="home-notification-avatar"
+                src="src/assets/avatars/mini_avatars/png/avatar_${item.sender.user_picture_number}.png"
+                alt="${item.sender.username}"
+            />
+            <div class="home-notification-sender">
+                ${item.sender.username}
+            </div>
+        </div>
+    `;
+
+    return li;
+}
+
+async function renderFeed() {
+    const list = document.querySelector(".home-notifications");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    const feed = await loadFeed();
+
+    if (!feed.length) {
+        list.innerHTML = `<li class="home-notification-item">Пока нет уведомлений</li>`;
+        return;
+    }
+
+    feed.forEach(item => {
+        list.appendChild(createNotificationItem(item));
+    });
+}
+
+
 document.addEventListener("DOMContentLoaded", async () => {
+    renderFeed();
     const searchInput = document.querySelector(".share-search-input");
     const list = document.querySelector(".share-track-list");
 
@@ -57,7 +136,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sendBtnStep3 = document.querySelector('[data-step="2"] .share-btn-primary');
 
-    // Если этих элементов нет — значит это НЕ страница "share"
     if (!searchInput || !list) return;
 
     let selectedTrack = null;
