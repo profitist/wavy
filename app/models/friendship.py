@@ -28,4 +28,3 @@ Friendship = Table(
         nullable=False,
     ),
 )
-

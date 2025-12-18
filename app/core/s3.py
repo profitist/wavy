@@ -2,16 +2,7 @@ from contextlib import asynccontextmanager
 from aiobotocore.session import get_session
 from fastapi import HTTPException
 from starlette import status
-import os
 from app.config import S3_ID, S3_SECRET
-
-
-import os
-from contextlib import asynccontextmanager
-
-from aiobotocore.session import get_session
-from fastapi import HTTPException
-from starlette import status
 
 
 class S3Client:
@@ -64,7 +55,7 @@ class S3Client:
         Скачивает объект в виде байтов.
         """
         try:
-            filename += '.png'
+            filename += ".png"
             async with self.get_client() as client:
                 response = await client.get_object(
                     Bucket=self.bucket_name,

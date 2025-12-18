@@ -37,8 +37,9 @@ async def get_friendship_repository(
 ):
     return FriendshipRepository(db=db)
 
+
 async def get_shared_track_repository(
-        db: Annotated[AsyncSession, Depends(get_async_session)]
+    db: Annotated[AsyncSession, Depends(get_async_session)],
 ):
     return SharedTrackRepository(db)
 
@@ -56,7 +57,12 @@ async def get_track_repository(
 
 
 async def get_s3_client():
-    return S3Client(access_key=S3_ID, secret_key=S3_SECRET, endpoint_url='https://storage.yandexcloud.net', bucket_name='storage-s3')
+    return S3Client(
+        access_key=S3_ID,
+        secret_key=S3_SECRET,
+        endpoint_url="https://storage.yandexcloud.net",
+        bucket_name="storage-s3",
+    )
 
 
 async def get_track_service(
@@ -69,5 +75,8 @@ async def get_track_service(
 async def get_sharing_service(
     track_repo: Annotated[TrackRepository, Depends(get_track_repository)],
     share_repo: Annotated[SharedTrackRepository, Depends(get_shared_track_repository)],
+    friend_repo: Annotated[FriendshipRepository, Depends(get_friendship_repository)],
 ) -> SharingService:
-    return SharingService(track_repo=track_repo, share_repo=share_repo)
+    return SharingService(
+        track_repo=track_repo, share_repo=share_repo, friend_repo=friend_repo
+    )
