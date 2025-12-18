@@ -1,14 +1,3 @@
-// ===============================
-//  ЭКСПОРТ КОНТЕЙНЕРА ДЛЯ ТОКЕНОВ
-// ===============================
-//export let token_dict = {
-//    access_token: "",
-//    refresh_token: "",
-//};
-
-// ===============================
-//  ФУНКЦИЯ ЛОГИНА
-// ===============================
 export async function login(userData) {
     try {
         const response = await fetch("http://212.193.27.136/users/token", {
@@ -36,16 +25,10 @@ export async function login(userData) {
     }
 }
 
-// ===============================
-//  КОД ДЛЯ СТРАНИЦЫ ВХОДА
-//  Выполняется только если на странице есть нужные элементы
-// ===============================
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector(".reg-form.center-column.card");
     const btn = document.getElementById("btn-login");
 
-    // Если кнопки нет — значит это НЕ страница логина → просто выходим.
     if (!form || !btn) return;
 
     btn.addEventListener("click", async () => {
@@ -54,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             await login(data);
-            goTo("screen-home.html");   // переход
+            goTo("screen-home.html");
         } catch (err) {
             alert("Ошибка входа, проверьте консоль.");
         }
