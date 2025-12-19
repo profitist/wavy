@@ -15,7 +15,7 @@ class ShareRequestSchema(BaseModel):
 
 class SharedTrackResponseSchema(BaseModel):
     id: uuid.UUID
-    sender_id: UserInFeedSchema
+    sender: UserInFeedSchema
     description: Optional[str]
     created_at: datetime = Field(default_factory=datetime.now)
     track: TrackSchema

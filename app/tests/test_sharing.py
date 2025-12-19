@@ -19,7 +19,7 @@ async def test_share_track_success(ac):
     mock_serv = AsyncMock()
     mock_serv.share_track.return_value = {
         "id": uuid.uuid4(),
-        "sender_id": uuid.uuid4(),
+        "sender": {"id": uuid.uuid4(), "username": "sender", "user_picture_number": 1},
         "description": "123123",
         "created_at": "2026-01-01T00:00:00",
         "track": {
