@@ -14,7 +14,7 @@ async function loadTracks() {
 async function searchTrackByName(name) {
     try {
         const response = await fetch(
-            `http://212.193.27.136/tracks/?title=${name}`,
+            `http://212.193.27.136/tracks/?q=${name}`,
             { method: "GET" }
         );
 
@@ -73,7 +73,7 @@ function createNotificationItem(item) {
     li.className = "home-notification-item";
 
     li.innerHTML = `
-        <div class="home-notification-left">
+        <div class="home-notification-left" type = "button" data-link = "${item.track.external_link}">
             <div class="home-notification-cover">
                 <svg fill="none" height="52" viewBox="0 0 52 52" width="52" xmlns="http://www.w3.org/2000/svg">
                     <rect fill="#7F7F7F" height="52" rx="11" width="52"></rect>
@@ -188,11 +188,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const found = results[0];
-        selectedTrack = found;
-
-        list.appendChild(createTrackElement(found));
-        list.firstChild.classList.add("active");
+        results.forEach(track => {
+            list.appendChild(createTrackElement(track));
+            list.firstChild.classList.add("active");
+        })
     });
 
     const step1NextBtn = document.querySelector('[data-step="1"] [data-go-step="2"]');
@@ -216,4 +215,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         await sendTrack(selectedTrack, "");
         alert("Трек успешно отправлен!");
     });
+
+    document.addEventListener("click",async(event) => {
+        const shareBtn = event.target.closest('.home-notification-left');
+        if (!shareBtn){
+            return;
+        }
+        window.location.href = shareBtn.dataset.link;
+    })
 });
