@@ -8,6 +8,7 @@ class TrackSchema(BaseModel):
     title: str = Field(min_length=1, max_length=80)
     author: str = Field(min_length=1, max_length=80)
     platform: str = Field(min_length=1, max_length=40, default="unknown")
+    external_link: str = Field(min_length=1, max_length=200)
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
 
 
