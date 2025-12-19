@@ -10,6 +10,7 @@ class UserInFeedSchema(BaseModel):
     user_picture_number: int = Field(default=1, ge=1, le=12)
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
 
+
 class UserCreateSchema(BaseModel):
     username: str = Field(min_length=3, max_length=40)
     hashed_password: str = Field(min_length=8, max_length=40, default="")
@@ -31,7 +32,7 @@ class UserSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
 
-    @field_validator('user_picture_number', mode='before')
+    @field_validator("user_picture_number", mode="before")
     def validate_picture_number(cls, v: int | None):
         if v is None:
             return 1

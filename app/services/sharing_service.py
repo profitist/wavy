@@ -84,10 +84,10 @@ class SharingService:
         ids = []
         for relation in friends:
             try:
-                if relation['sender']['id'] == user_id:
-                    ids.append(relation['receiver']['id'])
+                if relation["sender"]["id"] == user_id:
+                    ids.append(relation["receiver"]["id"])
                 else:
-                    ids.append(relation['sender']['id'])
+                    ids.append(relation["sender"]["id"])
             except (KeyError, ValueError, TypeError):
                 continue
         return await self.share_repo.get_last_tracks_feed(

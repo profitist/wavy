@@ -18,6 +18,10 @@ class TrackCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)
 
 
+class TrackDataBaseCreate(TrackCreateSchema):
+    external_link: str = Field(min_length=3, max_length=200)
+
+
 class TrackUpdateSchema(BaseModel):
     id: uuid.UUID
     title: str

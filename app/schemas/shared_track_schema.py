@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.schemas.track_schema import TrackCreateSchema, TrackSchema
 from app.schemas.user_schema import UserInFeedSchema
 
+
 class ShareRequestSchema(BaseModel):
     track: TrackCreateSchema
     description: Optional[str] = None
