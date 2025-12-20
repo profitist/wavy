@@ -1,0 +1,36 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><link rel='stylesheet' href='src/index.css'></head>
+<body class="page-settings">
+<!-- Верхняя панель -->
+<header class="screen-header settings-header">
+<!-- Кнопка назад -->
+<button class="btn-icon settings-back" onclick="goTo('./screen-profile.html')" type="button">
+<svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.825 13L13.425 18.6L12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825Z" fill="#1D1B20"></path>
+</svg>
+</button>
+<!-- Заголовок -->
+<div class="settings-title">Настройки</div>
+<!-- Спейсер справа для симметрии -->
+<div class="settings-header-spacer"></div>
+</header>
+<!-- Основной блок настроек -->
+<div class="settings-content">
+</div>
+<div class="settings-footer">
+<button class="btn btn--outline btn--logout" onclick="goTo('./screen-auth-choice.html')" type="button">
+                Выйти из аккаунта
+            </button>
+<!-- Блок "О приложении" -->
+<button class="settings-about" type="button">
+<div class="settings-about-text">
+<div class="settings-about-title">О приложении</div>
+<div class="settings-about-subtitle">Версия 1.0</div>
+</div>
+<div class="settings-about-arrow"><svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.6 12L8 7.4L9.4 6L15.4 12L9.4 18L8 16.6L12.6 12Z" fill="white"></path>
+</svg>
+</div>
+</button>
+</div>
+<script src="src/scripts/scripts.js"></script>
+</body></html>

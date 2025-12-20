@@ -1,0 +1,78 @@
+export async function login(userData) {
+    try {
+        const response = await fetch("https://dospivosos.ru/users/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams(userData),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            localStorage.setItem('access_token', data.access_token);
+            localStorage.setItem('refresh_token', data.refresh_token);
+            return data;
+        }
+        else {
+            throw new Error('Login failed');
+        }
+
+    } catch (err) {
+        alert("login hui sosat")
+        console.error("Ошибка входа:", err);
+        throw err;
+    }
+}
+
+export async function GetCurrentUserData(){
+    const token = localStorage.getItem('access_token')
+        try {
+            const response = await fetch("https://dospivosos.ru/profile/", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                }
+            });
+
+            if (!response.ok) throw new Error(await response.text());
+            let user = await response.json();
+            localStorage.setItem('avatarNumber',user.user_picture_number);
+            localStorage.setItem('currentUsername',user.username);
+            localStorage.setItem('description', user.description);
+            localStorage.setItem('userId', user.id);
+            
+        } catch (err) {
+            console.error("Ошибка получения данных о пользователе:", err);
+            alert("Упс, вас не существует");
+        }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector(".reg-form.center-column.card");
+    const btn = document.getElementById("btn-login");
+
+    if (!form || !btn) return;
+
+    btn.addEventListener("click", async () => {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        await login(data);
+        await GetCurrentUserData();
+        goTo("./screen-home.html");
+
+//        try {
+//            await login(data);
+//            alert("login pass");
+//            await GetCurrentUserData();
+//            alert("getdata pass");
+//            goTo("./screen-home.html");   // переход
+//        } catch (err) {
+//            alert("Ошибка входа, проверьте консоль.");
+//        }
+    });
+});
