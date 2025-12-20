@@ -4,9 +4,9 @@ from typing import AsyncGenerator
 from httpx import AsyncClient, ASGITransport
 
 os.environ["DATABASE_URL"] = "postgresql+asyncpg://user:pass@127.0.0.1:5432/test"
-os.environ["S3_ID"] = "nope"
-os.environ["S3_SECRET"] = "nope"
-os.environ["JWT_SECRET_KEY"] = "nope"
+os.environ["S3_ID"] = "нету"
+os.environ["S3_SECRET"] = "нету"
+os.environ["JWT_SECRET_KEY"] = "нету"
 os.environ["ALGORITHM"] = "HS256"
 
 from main import app

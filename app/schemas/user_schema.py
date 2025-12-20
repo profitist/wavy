@@ -43,6 +43,6 @@ class UserUpdateSchema(BaseModel):
     id: uuid.UUID
     username: str = Field(min_length=3, max_length=40)
     description: str = Field(min_length=0, max_length=250)
-    user_picture_number: int = Field(default=1, ge=1, le=7)
+    user_picture_number: int = Field(default=1, ge=1, le=12)
 
     model_config = ConfigDict(from_attributes=True, str_strip_whitespace=True)

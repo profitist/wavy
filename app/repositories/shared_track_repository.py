@@ -55,5 +55,4 @@ class SharedTrackRepository(BaseRepo[SharedTrack]):
             .options(selectinload(SharedTrack.track))
             .where(SharedTrack.id == shared_id)
         )
-        full_share = result.scalar_one()
         return result.scalar_one_or_none()
