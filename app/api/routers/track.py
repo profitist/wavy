@@ -13,7 +13,12 @@ from fastapi import (
 from typing import Annotated, List
 
 from app.models.user import User
-from app.schemas.track_schema import TrackSchema, TrackCreateSchema, TrackUpdateSchema
+from app.schemas.track_schema import (
+    TrackSchema,
+    TrackCreateSchema,
+    TrackUpdateSchema,
+    TrackDataBaseCreate,
+)
 from app.services.track_service import TrackService
 from app.core.dependencies import get_track_service
 from app.auth.user_validation import get_current_admin
@@ -48,7 +53,7 @@ async def search_tracks(
 
 @router.post("/", response_model=TrackSchema, status_code=status.HTTP_201_CREATED)
 async def create_track(
-    track: TrackCreateSchema,
+    track: TrackDataBaseCreate,
     service: TrackService = Depends(get_track_service),
     _: User = Depends(get_current_admin),
 ):

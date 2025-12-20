@@ -142,3 +142,4 @@ celerybeat.pid
 .venv
 .idea
 .env
+certbot/
