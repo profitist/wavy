@@ -6,10 +6,11 @@ from app.api.routers import friendship
 from app.api.routers import shared_track
 from app.api.routers import feed
 from fastapi.middleware.cors import CORSMiddleware
-
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
